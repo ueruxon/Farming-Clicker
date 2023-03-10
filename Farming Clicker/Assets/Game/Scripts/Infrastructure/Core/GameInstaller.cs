@@ -31,8 +31,8 @@ namespace Game.Scripts.Infrastructure.Core
 
 
             GridSystem gridSystem = new GridSystem(_gameConfig.Width, _gameConfig.Height, 
-                _gameConfig.CellSize, _gameConfig.CellPrefab, _gridContainer);
-            FarmController farmController = new FarmController(gameFactory, gridSystem);
+                _gameConfig.CellSize, _gameConfig.CellPrefab, _gridContainer, _gameConfig.OpenCellByDefault);
+            FarmController farmController = new FarmController(gameFactory, gridSystem, _gameConfig);
 
 
             _gameInitializer = new GameInitializer(_gameConfig, 

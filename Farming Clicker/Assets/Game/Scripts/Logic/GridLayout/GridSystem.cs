@@ -10,22 +10,27 @@ namespace Game.Scripts.Logic.GridLayout
         
         private readonly GridCell _cellPrefab;
         private readonly Transform _gridContainer;
+        private readonly int _openCellCountByDefault;
 
         private GridCell[,] _gridArray;
 
-        public GridSystem(int width, int height, float cellSize, GridCell cellPrefab, Transform gridContainer)
+        public GridSystem(int width, int height, float cellSize, 
+            GridCell cellPrefab, Transform gridContainer, int openCellCountByDefault = 0)
         {
             _width = width;
             _height = height;
             _cellSize = cellSize;
             _cellPrefab = cellPrefab;
             _gridContainer = gridContainer;
+            _openCellCountByDefault = openCellCountByDefault;
 
             _gridArray = new GridCell[_width, _height];
         }
 
         public GridCell[,] CreateGrid()
         {
+            int openIndex = 0;
+            
             for (int x = 0; x < _width; x++)
             {
                 for (int z = 0; z < _height; z++)
@@ -36,8 +41,13 @@ namespace Game.Scripts.Logic.GridLayout
                     
                     GridCell cell = Object.Instantiate(_cellPrefab, worldPosition, Quaternion.identity);
                     cell.Init(worldPosition, cellPosition, _cellSize);
+                    cell.Close();
                     cell.transform.SetParent(_gridContainer);
-
+                    
+                    if (openIndex < _openCellCountByDefault)
+                        cell.Open();
+                    openIndex++;
+                    
                     _gridArray[x, z] = cell;
                 }
             }

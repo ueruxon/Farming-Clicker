@@ -16,10 +16,10 @@ MonoBehaviour:
   Name: Corn
   ViewMaterial: {fileID: 2100000, guid: abebb47ddb222d149b7251a27deba82b, type: 2}
   Icon: {fileID: 21300000, guid: ad54035c521df444bb59a8256a62c079, type: 3}
-  GrowTime: 20
+  GrowTime: 25
   Price:
     SeedPrice: 2
     CoinPrice: 1
   DropData:
-    SeedDropChance: 25
+    SeedDropChance: 20
     Coin: 5

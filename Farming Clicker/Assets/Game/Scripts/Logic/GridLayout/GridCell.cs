@@ -1,11 +1,18 @@
-﻿using System;
-using Game.Scripts.Logic.Production;
+﻿using Game.Scripts.Logic.Production;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Game.Scripts.Logic.GridLayout
 {
-    public class GridCell : MonoBehaviour
+    public enum CellState
+    {
+        Close,
+        Open,
+        Occupied
+    }
+    
+    public class GridCell : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private GameObject _outlineVisual;
         [SerializeField] private BoxCollider _collider;
@@ -17,7 +24,8 @@ namespace Game.Scripts.Logic.GridLayout
         [SerializeField] private TextMeshPro _text;
 
         private ProductionArea _productionArea;
-        
+        private CellState _cellState;
+
         private Vector3 _currentWorldPosition;
         private Vector2Int _cellPosition;
 
@@ -29,7 +37,7 @@ namespace Game.Scripts.Logic.GridLayout
             _collider.size = new Vector3(cellSize, 0.5f, cellSize);
             _outlineVisual.transform.localScale = Vector3.one * cellSize;
             _outlineVisual.SetActive(false);
-
+            
             if (_debugMode)
                 DebugText();
         }
@@ -39,14 +47,22 @@ namespace Game.Scripts.Logic.GridLayout
             _productionArea = productionArea;
         }
 
+        public void Open() => 
+            _cellState = CellState.Open;
+        
+        public void Close() => 
+            _cellState = CellState.Close;
+
         private void OnMouseEnter()
         {
-            _outlineVisual.SetActive(true);
+            if (_cellState != CellState.Close)
+                _outlineVisual.SetActive(true);
         }
 
         private void OnMouseExit()
         {
-            _outlineVisual.SetActive(false);
+            if (_cellState != CellState.Close)
+                _outlineVisual.SetActive(false);
         }
 
         private void DebugText()
@@ -54,6 +70,14 @@ namespace Game.Scripts.Logic.GridLayout
             //_debugTransform.sizeDelta = new Vector2(_currentPosition.x, _currentPosition.z);
             string position = $"X: {_currentWorldPosition.x}, Z: {_currentWorldPosition.z}";
             _text.SetText(position);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (_cellState != CellState.Close)
+            {
+                print("click");
+            }
         }
     }
 }

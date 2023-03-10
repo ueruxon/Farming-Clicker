@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 648b7ef6b69e4995a3d43ead2a13676e, type: 3}
-  m_Name: Potato
+  m_Name: Blueberries
   m_EditorClassIdentifier: 
-  ProductType: 2
-  Name: Corn
-  ViewMaterial: {fileID: 2100000, guid: 29e15de1a37fce646ae45d09a7a5f76e, type: 2}
-  Icon: {fileID: 21300000, guid: d114b30b2c172c541b5c4da089791e0c, type: 3}
-  GrowTime: 30
+  ProductType: 8
+  Name: Blueberries
+  ViewMaterial: {fileID: 2100000, guid: 408e4c7cf334f084f9a013cdc8fc5156, type: 2}
+  Icon: {fileID: 21300000, guid: abb6fc68a6c63014182c2871f205ea06, type: 3}
+  GrowTime: 20
   Price:
-    SeedPrice: 2
-    CoinPrice: 1
+    SeedPrice: 5
+    CoinPrice: 100
   DropData:
     SeedDropChance: 15
-    Coin: 10
+    Coin: 25

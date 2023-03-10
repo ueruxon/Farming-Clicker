@@ -1,4 +1,5 @@
-﻿using Game.Scripts.Infrastructure.Services.Factory;
+﻿using Game.Scripts.Data;
+using Game.Scripts.Infrastructure.Services.Factory;
 using Game.Scripts.Logic.GridLayout;
 using Game.Scripts.Logic.Production;
 using UnityEngine;
@@ -9,17 +10,23 @@ namespace Game.Scripts.Logic
     {
         private readonly GameFactory _gameFactory;
         private readonly GridSystem _gridSystem;
+        private readonly GameConfig _gameConfig;
 
-        public FarmController(GameFactory gameFactory, GridSystem gridSystem)
+        public FarmController(GameFactory gameFactory, GridSystem gridSystem, GameConfig gameConfig)
         {
             _gameFactory = gameFactory;
             _gridSystem = gridSystem;
+            _gameConfig = gameConfig;
         }
 
         public void InitFarm()
         {
             GridCell[,] grid = _gridSystem.CreateGrid();
-            
+
+            foreach (GridCell cell in grid)
+            {
+                
+            }
             
             
             // для теста
@@ -27,13 +34,9 @@ namespace Game.Scripts.Logic
             CreateProductionArea(ProductType.Wheat, new Vector2Int(0, 1));
             CreateProductionArea(ProductType.Wheat, new Vector2Int(0, 2));
             
-            CreateProductionArea(ProductType.Corn, new Vector2Int(2, 0));
-            CreateProductionArea(ProductType.Corn, new Vector2Int(2, 1));
-            CreateProductionArea(ProductType.Corn, new Vector2Int(2, 2));
-            
-            CreateProductionArea(ProductType.Potato, new Vector2Int(4, 0));
-            CreateProductionArea(ProductType.Potato, new Vector2Int(4, 1));
-            CreateProductionArea(ProductType.Potato, new Vector2Int(4, 2));
+            CreateProductionArea(ProductType.Potato, new Vector2Int(1, 0));
+            CreateProductionArea(ProductType.Tomato, new Vector2Int(1, 1));
+            CreateProductionArea(ProductType.Pumpkin, new Vector2Int(1, 2));
         }
 
         private void CreateProductionArea(ProductType productType, Vector2Int cellPosition)

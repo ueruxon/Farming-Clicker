@@ -16,7 +16,7 @@ MonoBehaviour:
   Name: Wheat
   ViewMaterial: {fileID: 2100000, guid: b5f2430a6c8af7a43a3069668a33d490, type: 2}
   Icon: {fileID: 21300000, guid: 249cd07fd7463684f84d5a149805e773, type: 3}
-  GrowTime: 10
+  GrowTime: 15
   Price:
     SeedPrice: 1
     CoinPrice: 0
