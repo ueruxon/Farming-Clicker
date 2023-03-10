@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Scripts.Logic.Production;
 using TMPro;
 using UnityEngine;
 
@@ -15,11 +16,15 @@ namespace Game.Scripts.Logic.GridLayout
         [SerializeField] private RectTransform _debugTransform;
         [SerializeField] private TextMeshPro _text;
 
-        private Vector3 _currentPosition;
+        private ProductionArea _productionArea;
+        
+        private Vector3 _currentWorldPosition;
+        private Vector2Int _cellPosition;
 
-        public void Init(Vector3 position, float cellSize)
+        public void Init(Vector3 position, Vector2Int cellPosition, float cellSize)
         {
-            _currentPosition = position;
+            _currentWorldPosition = position;
+            _cellPosition = cellPosition;
 
             _collider.size = new Vector3(cellSize, 0.5f, cellSize);
             _outlineVisual.transform.localScale = Vector3.one * cellSize;
@@ -29,21 +34,26 @@ namespace Game.Scripts.Logic.GridLayout
                 DebugText();
         }
 
-        private void DebugText()
+        public void AddProductionArea(ProductionArea productionArea)
         {
-            //_debugTransform.sizeDelta = new Vector2(_currentPosition.x, _currentPosition.z);
-            string position = $"X: {_currentPosition.x}, Z: {_currentPosition.z}";
-            _text.SetText(position);
+            _productionArea = productionArea;
         }
 
         private void OnMouseEnter()
         {
             _outlineVisual.SetActive(true);
         }
-        
+
         private void OnMouseExit()
         {
             _outlineVisual.SetActive(false);
+        }
+
+        private void DebugText()
+        {
+            //_debugTransform.sizeDelta = new Vector2(_currentPosition.x, _currentPosition.z);
+            string position = $"X: {_currentWorldPosition.x}, Z: {_currentWorldPosition.z}";
+            _text.SetText(position);
         }
     }
 }

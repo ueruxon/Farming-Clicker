@@ -1,4 +1,8 @@
 ﻿using Game.Scripts.Data;
+using Game.Scripts.Infrastructure.Services.AssetManagement;
+using Game.Scripts.Infrastructure.Services.Factory;
+using Game.Scripts.Infrastructure.Services.StaticData;
+using Game.Scripts.Logic;
 using Game.Scripts.Logic.GridLayout;
 using UnityEngine;
 
@@ -21,11 +25,19 @@ namespace Game.Scripts.Infrastructure.Core
 
         private void InstallSystems()
         {
+            IAssetProvider assetProvider = new AssetProvider();
+            IStaticDataService staticDataService = new StaticDataService(assetProvider);
+            GameFactory gameFactory = new GameFactory(assetProvider, staticDataService, _gameConfig);
+
+
             GridSystem gridSystem = new GridSystem(_gameConfig.Width, _gameConfig.Height, 
                 _gameConfig.CellSize, _gameConfig.CellPrefab, _gridContainer);
+            FarmController farmController = new FarmController(gameFactory, gridSystem);
 
 
-            _gameInitializer = new GameInitializer(_gameConfig, gridSystem);
+            _gameInitializer = new GameInitializer(_gameConfig, 
+                staticDataService,
+                farmController);
         }
     }
 }
