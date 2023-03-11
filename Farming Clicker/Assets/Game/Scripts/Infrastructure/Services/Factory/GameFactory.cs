@@ -24,10 +24,17 @@ namespace Game.Scripts.Infrastructure.Services.Factory
         {
             ProductData productData = _staticDataService.GetDataForProduct(productType);
             ProductionArea productionArea = _assetProvider.Instantiate<ProductionArea>(AssetPath.ProductAreaPath, at);
-            
             productionArea.Init(productData, _gameConfig.CellSize);
 
             return productionArea;
+        }
+
+        public ProductionAreaGhost CreateAreaGhost(Vector3 at)
+        {
+            var area = _assetProvider.Instantiate<ProductionAreaGhost>(AssetPath.ProductAreaGhostPath, at);
+            area.Init(_gameConfig.CellSize);
+            
+            return area;
         }
     }
 }

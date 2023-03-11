@@ -7,5 +7,6 @@
         
         public const string ProductsDataPath = "StaticData/Products";
         public const string ProductAreaPath = "Prefabs/ProductionArea";
+        public const string ProductAreaGhostPath = "Prefabs/ProductionAreaGhost";
     }
 }

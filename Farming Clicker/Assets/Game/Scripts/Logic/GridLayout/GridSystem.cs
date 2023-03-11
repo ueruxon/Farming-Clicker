@@ -68,5 +68,25 @@ namespace Game.Scripts.Logic.GridLayout
         
         public Vector3 GetWorldPosition(Vector2Int cellPosition) => 
             new Vector3(cellPosition.x, 0, cellPosition.y) * _cellSize;
+        
+        public bool IsValidGridPosition(Vector2Int cellPosition)
+        {
+            return cellPosition.x >= 0 && 
+                   cellPosition.y >= 0 && 
+                   cellPosition.x < _width && 
+                   cellPosition.y < _height;
+        }
+
+        public void SelectAllAvailableCell()
+        {
+            foreach (GridCell gridCell in _gridArray) 
+                gridCell.SetSelectMode(SelectMode.Global);
+        }
+
+        public void DeselectAllAvailableCell()
+        {
+            foreach (GridCell gridCell in _gridArray) 
+                gridCell.SetSelectMode(SelectMode.Local);
+        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Game.Scripts.Data;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
-using Game.Scripts.Logic.GridLayout;
 
 namespace Game.Scripts.Infrastructure.Core
 {

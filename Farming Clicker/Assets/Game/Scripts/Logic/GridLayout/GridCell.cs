@@ -1,4 +1,5 @@
-﻿using Game.Scripts.Logic.Production;
+﻿using System;
+using Game.Scripts.Logic.Production;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,6 +15,10 @@ namespace Game.Scripts.Logic.GridLayout
     
     public class GridCell : MonoBehaviour, IPointerClickHandler
     {
+        public event Action<Vector2Int> Enter; 
+        public event Action<Vector2Int> Exit;
+        public event Action<Vector2Int> Clicked; 
+
         [SerializeField] private GameObject _outlineVisual;
         [SerializeField] private BoxCollider _collider;
         [Space(4)]
@@ -24,7 +29,9 @@ namespace Game.Scripts.Logic.GridLayout
         [SerializeField] private TextMeshPro _text;
 
         private ProductionArea _productionArea;
-        private CellState _cellState;
+
+        public CellState _cellState;
+        public SelectMode _selectMode;
 
         private Vector3 _currentWorldPosition;
         private Vector2Int _cellPosition;
@@ -40,29 +47,53 @@ namespace Game.Scripts.Logic.GridLayout
             
             if (_debugMode)
                 DebugText();
+
+            SetSelectMode(SelectMode.Local);
         }
 
-        public void AddProductionArea(ProductionArea productionArea)
+        public void SetSelectMode(SelectMode selectMode)
         {
-            _productionArea = productionArea;
+            _selectMode = selectMode;
+            _outlineVisual.SetActive(selectMode == SelectMode.Global && IsAvailable());
         }
 
         public void Open() => 
             _cellState = CellState.Open;
-        
+
         public void Close() => 
             _cellState = CellState.Close;
 
+        public bool IsAvailable() => 
+            _cellState == CellState.Open;
+
+        public void AddProductionArea(ProductionArea productionArea)
+        {
+            _productionArea = productionArea;
+            _cellState = CellState.Occupied;
+        }
+
         private void OnMouseEnter()
         {
-            if (_cellState != CellState.Close)
+            if (_cellState == CellState.Occupied
+                && _selectMode == SelectMode.Local)
+            {
                 _outlineVisual.SetActive(true);
+            }
+
+            if (_cellState == CellState.Open && _selectMode == SelectMode.Global) 
+                Enter?.Invoke(_cellPosition);
         }
 
         private void OnMouseExit()
         {
-            if (_cellState != CellState.Close)
+            if (_cellState == CellState.Occupied
+                && _selectMode == SelectMode.Local)
+            {
                 _outlineVisual.SetActive(false);
+            }
+            
+            if (_cellState == CellState.Open && _selectMode == SelectMode.Global) 
+                Exit?.Invoke(_cellPosition);
         }
 
         private void DebugText()
@@ -74,9 +105,10 @@ namespace Game.Scripts.Logic.GridLayout
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (_cellState != CellState.Close)
+            if ((_cellState == CellState.Occupied && _selectMode == SelectMode.Local) 
+                || (_cellState == CellState.Open && _selectMode == SelectMode.Global))
             {
-                print("click");
+                Clicked?.Invoke(_cellPosition);
             }
         }
     }
