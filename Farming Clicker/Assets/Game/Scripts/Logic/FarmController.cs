@@ -1,4 +1,5 @@
-﻿using Game.Scripts.Data;
+﻿using System;
+using Game.Scripts.Data;
 using Game.Scripts.Infrastructure.Services.Factory;
 using Game.Scripts.Logic.GridLayout;
 using Game.Scripts.Logic.Production;
@@ -14,12 +15,16 @@ namespace Game.Scripts.Logic
     
     public class FarmController
     {
+        public event Action ProductionBuilt; 
+
         private readonly GameFactory _gameFactory;
         private readonly GridSystem _gridSystem;
         private readonly GameConfig _gameConfig;
 
         private Camera _mainCamera;
+        
         private ProductionAreaGhost _areaGhost;
+        private ProductType _activeProductType;
 
         private FarmState _farmState;
 
@@ -54,12 +59,13 @@ namespace Game.Scripts.Logic
             // CreateProductionArea(ProductType.Tomato, new Vector2Int(1, 1));
             //CreateProductionArea(ProductType.Pumpkin, new Vector2Int(5, 2));
             
-            CreateGhostArea();
+            //CreateGhostArea();
         }
 
-        public void CreateGhostArea()
+        public void CreateGhostArea(ProductType productType)
         {
             SetState(FarmState.Build);
+            _activeProductType = productType;
             
             Vector3 mousePosition = Input.mousePosition;
             mousePosition.z = _mainCamera.nearClipPlane;
@@ -98,48 +104,19 @@ namespace Game.Scripts.Logic
 
         private void OnCellClicked(Vector2Int cellPosition)
         {
-            Debug.Log("click");
-            
             if (_farmState == FarmState.Build)
             {
                 _areaGhost.Destroy();
                 _areaGhost = null;
                 _gridSystem.DeselectAllAvailableCell();
             
-                CreateProductionArea(ProductType.Tomato, cellPosition);
+                CreateProductionArea(_activeProductType, cellPosition);
                 SetState(FarmState.Select);
                 
-                return;
+                _activeProductType = ProductType.None;
+                
+                ProductionBuilt?.Invoke();
             }
-
-            // if (_farmState == FarmState.Select)
-            // {
-            //     GridCell cell = _gridSystem.GetGridCell(cellPosition);
-            //     
-            //     // может вынести в скрипт камеры
-            //     Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-            //     
-            //     if (Physics.Raycast(ray, out RaycastHit hit, 50f))
-            //     {
-            //         Vector3 difference = hit.point - _mainCamera.transform.position;
-            //         Vector3 scaledDelta = difference * 0.5f;
-            //
-            //         Vector3 delta = difference - scaledDelta;
-            //         
-            //         Debug.Log($"scaledDelta: {scaledDelta}");
-            //         Debug.Log($"delta: {delta}");
-            //
-            //         // Vector3 zoomOffset = new Vector3(
-            //         //     _mainCamera.transform.position.x + hit.point.x / 2,
-            //         //     _mainCamera.transform.position.y + hit.point.z / 2,
-            //         //     _mainCamera.transform.position.z);
-            //         //
-            //         // _mainCamera.transform.position = zoomOffset;
-            //         // _mainCamera.orthographicSize = 8f;
-            //     }
-            //     
-            //     //_mainCamera.transform.LookAt(cell.transform);
-            // }
         }
 
         private void SetState(FarmState newState) => 

@@ -12,14 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648b7ef6b69e4995a3d43ead2a13676e, type: 3}
   m_Name: Pumpkin
   m_EditorClassIdentifier: 
-  ProductType: 6
+  DataType: 0
   Name: Pumpkin
-  ViewMaterial: {fileID: 2100000, guid: 9030203b4a5789b45856f533c9096a8c, type: 2}
   Icon: {fileID: 21300000, guid: 2f4084d4c4bb23c4188d673a86430a7c, type: 3}
-  GrowTime: 40
   Price:
     SeedPrice: 4
     CoinPrice: 50
+  Description: Pumpkins are a type of squash that is a popular ingredient in many
+    dishes, such as pies, soups, and roasted vegetables. They are rich in nutrients
+    and often associated with the fall season.
+  ProductType: 7
+  ViewMaterial: {fileID: 2100000, guid: 9030203b4a5789b45856f533c9096a8c, type: 2}
+  GrowTime: 40
   DropData:
     SeedDropChance: 10
     Coin: 25

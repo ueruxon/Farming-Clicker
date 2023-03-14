@@ -10,6 +10,12 @@ namespace Game.Scripts.Infrastructure.Services.AssetManagement
             return Object.Instantiate(prefab, at, Quaternion.identity);
         }
 
+        public T Instantiate<T>(string path, Transform parent) where T : Object
+        {
+            var prefab = ResourceLoader.Load<T>(path);
+            return Object.Instantiate(prefab, parent);
+        }
+
         public T Instantiate<T>(string path) where T : Object
         {
             var prefab = ResourceLoader.Load<T>(path);

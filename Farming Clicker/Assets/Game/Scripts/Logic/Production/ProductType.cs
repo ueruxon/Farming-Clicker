@@ -2,6 +2,7 @@
 {
     public enum ProductType
     {
+        None,
         Wheat,
         Corn,
         Potato,
@@ -10,6 +11,6 @@
         Strawberry,
         Pumpkin,
         Peppers,
-        Blueberries,
+        Blueberries
     }
 }

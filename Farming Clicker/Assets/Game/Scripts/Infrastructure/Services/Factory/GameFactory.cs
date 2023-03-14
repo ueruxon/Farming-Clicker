@@ -22,9 +22,9 @@ namespace Game.Scripts.Infrastructure.Services.Factory
 
         public ProductionArea CreateProductionArea(ProductType productType, Vector3 at)
         {
-            ProductData productData = _staticDataService.GetDataForProduct(productType);
+            ProductItemData productItemData = _staticDataService.GetDataForProduct(productType);
             ProductionArea productionArea = _assetProvider.Instantiate<ProductionArea>(AssetPath.ProductAreaPath, at);
-            productionArea.Init(productData, _gameConfig.CellSize);
+            productionArea.Init(productItemData, _gameConfig.CellSize);
 
             return productionArea;
         }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Game.Scripts.Data.StaticData;
 using Game.Scripts.Data.StaticData.Product;
 using Game.Scripts.Infrastructure.Services.AssetManagement;
 using Game.Scripts.Logic.Production;
-using UnityEngine;
 
 namespace Game.Scripts.Infrastructure.Services.StaticData
 {
@@ -12,7 +12,10 @@ namespace Game.Scripts.Infrastructure.Services.StaticData
         private readonly IAssetProvider _assetProvider;
 
         private ProductionArea _productionAreaPrefab;
-        private Dictionary<ProductType, ProductData> _productDataByType;
+        private Dictionary<string, ProductType> _productTypeByName;
+        private Dictionary<ProductType, ProductItemData> _productDataByType;
+
+        private Dictionary<ShopDataType, List<ShopItemData>> _shopDataByType;
 
         public StaticDataService(IAssetProvider assetProvider) => 
             _assetProvider = assetProvider;
@@ -22,13 +25,35 @@ namespace Game.Scripts.Infrastructure.Services.StaticData
 
         private void LoadData()
         {
-            _productDataByType = _assetProvider.LoadAll<ProductData>(AssetPath.ProductsDataPath)
-                .ToDictionary(x => x.ProductType, x => x);
+            ProductItemData[] productsItemData = _assetProvider.LoadAll<ProductItemData>(AssetPath.ProductsDataPath);
+
+            _productTypeByName = productsItemData.ToDictionary(x => x.Name, x => x.ProductType);
+            _productDataByType = productsItemData.ToDictionary(x => x.ProductType, x => x);
+            
+            _shopDataByType = new()
+            {
+                [ShopDataType.Product] = _assetProvider.LoadAll<ShopItemData>(AssetPath.ProductsDataPath)
+                    .ToList(),
+                [ShopDataType.Upgrade] = _assetProvider.LoadAll<ShopItemData>(AssetPath.UpgradesDataPath)
+                    .ToList(),
+            };
         }
 
-        public ProductData GetDataForProduct(ProductType type) =>
-            _productDataByType.TryGetValue(type, out ProductData data)
+        public ProductType GetProductType(string productName)
+        {
+            return _productTypeByName.TryGetValue(productName, out ProductType type)
+                ? type
+                : ProductType.None;
+        }
+
+        public ProductItemData GetDataForProduct(ProductType type) =>
+            _productDataByType.TryGetValue(type, out ProductItemData data)
                 ? data
                 : null;
+        
+        public List<ShopItemData> GetDataForShop(ShopDataType type) => 
+            _shopDataByType.TryGetValue(type, out List<ShopItemData> data)
+            ? data
+            : null;
     }
 }
