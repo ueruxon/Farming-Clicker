@@ -72,6 +72,15 @@ namespace Game.Scripts.Logic.GridLayout
             _cellState = CellState.Occupied;
         }
 
+        public void ClearProductionArea()
+        {
+            _productionArea = null;
+            _cellState = CellState.Open;
+        }
+
+        public ProductionArea GetProductionArea() => 
+            _productionArea;
+
         private void OnMouseEnter()
         {
             if (_cellState == CellState.Occupied

@@ -29,11 +29,9 @@ namespace Game.Scripts.Infrastructure.Core
             IAssetProvider assetProvider = new AssetProvider();
             IStaticDataService staticDataService = new StaticDataService(assetProvider);
             GameFactory gameFactory = new GameFactory(assetProvider, staticDataService, _gameConfig);
-            
             GridSystem gridSystem = new GridSystem(_gameConfig.Width, _gameConfig.Height, 
                 _gameConfig.CellSize, _gameConfig.CellPrefab, _gridContainer, _gameConfig.OpenCellByDefault);
-            FarmController farmController = new FarmController(gameFactory, gridSystem, _gameConfig);
-
+            FarmController farmController = new FarmController(gameFactory, gridSystem);
             UIFactory uiFactory = new UIFactory(assetProvider, staticDataService, farmController);
 
             _gameInitializer = new GameInitializer(_gameConfig, 

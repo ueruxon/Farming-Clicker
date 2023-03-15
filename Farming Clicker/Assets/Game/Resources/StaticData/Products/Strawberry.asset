@@ -25,5 +25,6 @@ MonoBehaviour:
   ViewMaterial: {fileID: 2100000, guid: b0f09fd431d55524091787f8682911e6, type: 2}
   GrowTime: 25
   DropData:
-    SeedDropChance: 25
-    Coin: 5
+    SeedDropChance: 20
+    SeedDropAmount: 2
+    CoinDropAmount: 10

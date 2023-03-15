@@ -37,6 +37,7 @@ namespace Game.Scripts.Infrastructure.Core
             _uiFactory.CreateUIRoot();
             _uiFactory.CreateHUD();
             _uiFactory.CreateShop();
+            _uiFactory.CreateSelectProductArea();
         }
 
         private void InitGameWorld()

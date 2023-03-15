@@ -26,4 +26,5 @@ MonoBehaviour:
   GrowTime: 40
   DropData:
     SeedDropChance: 25
-    Coin: 40
+    SeedDropAmount: 2
+    CoinDropAmount: 30

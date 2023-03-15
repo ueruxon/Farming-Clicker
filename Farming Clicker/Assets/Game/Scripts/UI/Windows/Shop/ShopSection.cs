@@ -130,7 +130,7 @@ namespace Game.Scripts.UI.Windows.Shop
                 navigationMode == NavigationMode.Forward ? _forwardHidePosition : _backHidePosition;
             Vector2 startPositionForPrevContent = _openPosition;
 
-            Vector2 endPositionForNexContent = _openPosition;
+            Vector2 endPositionForNextContent = _openPosition;
             Vector2 endPositionForPrevContent = 
                 navigationMode == NavigationMode.Forward ? _backHidePosition : _forwardHidePosition;
             
@@ -140,13 +140,13 @@ namespace Game.Scripts.UI.Windows.Shop
                 t = Mathf.Sin(t * Mathf.PI * 0.5f);
 
                 prevContent.anchoredPosition = Vector2.Lerp(startPositionForPrevContent, endPositionForPrevContent, t);
-                nextContent.anchoredPosition = Vector2.Lerp(startPositionForNextContent, endPositionForNexContent, t);
+                nextContent.anchoredPosition = Vector2.Lerp(startPositionForNextContent, endPositionForNextContent, t);
                 currentTime += Time.deltaTime;
                 yield return null;
             }
 
             prevContent.anchoredPosition = endPositionForPrevContent;
-            nextContent.anchoredPosition = endPositionForNexContent;
+            nextContent.anchoredPosition = endPositionForNextContent;
             
             prevContent.gameObject.SetActive(false);
         }

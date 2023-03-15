@@ -5,6 +5,7 @@ using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
 using Game.Scripts.Logic.Production;
 using Game.Scripts.UI.Elements;
+using Game.Scripts.UI.Windows.SelectArea;
 using Game.Scripts.UI.Windows.Shop;
 using UnityEngine;
 
@@ -60,6 +61,14 @@ namespace Game.Scripts.UI.Services.Factory
             shopItem.Init(shopItemData, farmData);
             
             return shopItem;
+        }
+
+        public void CreateSelectProductArea()
+        {
+            SelectAreaWindow areaWindow =
+                _assetProvider.Instantiate<SelectAreaWindow>(AssetPath.UISelectAreaPath, _uiRoot);
+            areaWindow.Init(_farmController);
+            areaWindow.Hide();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Scripts.Logic;
+using Game.Scripts.Logic.Production;
 using Game.Scripts.UI.Windows.Shop;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,6 +21,8 @@ namespace Game.Scripts.UI.Elements
 
             _farmController = farmController;
             _farmController.ProductionBuilt += Show;
+            _farmController.ProductAreaSelected += OnProductAreaSelected;
+            _farmController.ProductAreaDeselected += Show;
             
             _openButton.onClick.AddListener(OpenShop);
         }
@@ -33,10 +36,15 @@ namespace Game.Scripts.UI.Elements
         private void Show() => 
             gameObject.SetActive(true);
 
+        private void OnProductAreaSelected(ProductionArea productionArea) => 
+            Hide();
+
         private void OnDestroy()
         {
             _shopWindow.ShopItemSelected -= Hide;
             _farmController.ProductionBuilt -= Show;
+            _farmController.ProductAreaDeselected -= Show;
+            _farmController.ProductAreaSelected -= OnProductAreaSelected;
             _openButton.onClick.RemoveListener(OpenShop);
         }
     }

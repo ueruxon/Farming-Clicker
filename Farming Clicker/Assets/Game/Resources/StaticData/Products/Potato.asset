@@ -23,7 +23,8 @@ MonoBehaviour:
     in dishes.
   ProductType: 3
   ViewMaterial: {fileID: 2100000, guid: 29e15de1a37fce646ae45d09a7a5f76e, type: 2}
-  GrowTime: 30
+  GrowTime: 50
   DropData:
     SeedDropChance: 15
-    Coin: 10
+    SeedDropAmount: 2
+    CoinDropAmount: 10

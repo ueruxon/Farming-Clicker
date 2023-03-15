@@ -21,6 +21,7 @@ namespace Game.Scripts.Data.StaticData.Product
     public class DropData
     {
         public int SeedDropChance;
-        public int Coin;
+        public int SeedDropAmount;
+        public int CoinDropAmount;
     }
 }

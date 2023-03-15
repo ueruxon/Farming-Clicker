@@ -15,11 +15,12 @@ namespace Game.Scripts.Logic
     
     public class FarmController
     {
-        public event Action ProductionBuilt; 
+        public event Action ProductionBuilt;
+        public event Action<ProductionArea> ProductAreaSelected;
+        public event Action ProductAreaDeselected;
 
         private readonly GameFactory _gameFactory;
         private readonly GridSystem _gridSystem;
-        private readonly GameConfig _gameConfig;
 
         private Camera _mainCamera;
         
@@ -28,12 +29,10 @@ namespace Game.Scripts.Logic
 
         private FarmState _farmState;
 
-        public FarmController(GameFactory gameFactory, GridSystem gridSystem, GameConfig gameConfig)
+        public FarmController(GameFactory gameFactory, GridSystem gridSystem)
         {
             _gameFactory = gameFactory;
             _gridSystem = gridSystem;
-            _gameConfig = gameConfig;
-            
             _mainCamera = Camera.main;
         }
 
@@ -48,18 +47,6 @@ namespace Game.Scripts.Logic
             }
 
             SetState(FarmState.Select);
-            
-            
-            // для теста
-            CreateProductionArea(ProductType.Wheat, new Vector2Int(0, 0));
-            CreateProductionArea(ProductType.Wheat, new Vector2Int(0, 1));
-            CreateProductionArea(ProductType.Wheat, new Vector2Int(0, 2));
-            
-            // CreateProductionArea(ProductType.Potato, new Vector2Int(1, 0));
-            // CreateProductionArea(ProductType.Tomato, new Vector2Int(1, 1));
-            //CreateProductionArea(ProductType.Pumpkin, new Vector2Int(5, 2));
-            
-            //CreateGhostArea();
         }
 
         public void CreateGhostArea(ProductType productType)
@@ -75,15 +62,18 @@ namespace Game.Scripts.Logic
             _gridSystem.SelectAllAvailableCell();
         }
 
+        public void DeselectArea()
+        {
+            SetState(FarmState.Select);
+            ProductAreaDeselected?.Invoke();
+        }
+
         private void CreateProductionArea(ProductType productType, Vector2Int cellPosition)
         {
             GridCell gridCell = _gridSystem.GetGridCell(cellPosition);
             Vector3 spawnPosition = _gridSystem.GetWorldPosition(cellPosition);
             ProductionArea productionArea = _gameFactory.CreateProductionArea(productType, at: spawnPosition);
             gridCell.AddProductionArea(productionArea);
-            
-            // для теста
-            productionArea.ActivateProduction();
         }
 
         private void OnCellEnter(Vector2Int cellPosition)
@@ -116,6 +106,16 @@ namespace Game.Scripts.Logic
                 _activeProductType = ProductType.None;
                 
                 ProductionBuilt?.Invoke();
+                
+                return;
+            }
+
+            if (_farmState == FarmState.Select)
+            {
+                GridCell cell = _gridSystem.GetGridCell(cellPosition);
+                ProductionArea productionArea = cell.GetProductionArea();
+                
+                ProductAreaSelected?.Invoke(productionArea);
             }
         }
 
