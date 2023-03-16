@@ -17,10 +17,12 @@ namespace Game.Scripts.UI.Elements
         public void Init(ShopWindow shopWindow, FarmController farmController)
         {
             _shopWindow = shopWindow;
-            _shopWindow.ShopItemSelected += Hide;
+            //_shopWindow.ShopItemSelected += Hide;
 
             _farmController = farmController;
-            _farmController.ProductionBuilt += Show;
+            _farmController.ProductionAreaChoices += Hide;
+            _farmController.ProductionAreaCanceled += Show;
+            _farmController.ProductionAreaBuilt += Show;
             _farmController.ProductAreaSelected += OnProductAreaSelected;
             _farmController.ProductAreaDeselected += Show;
             
@@ -41,8 +43,9 @@ namespace Game.Scripts.UI.Elements
 
         private void OnDestroy()
         {
-            _shopWindow.ShopItemSelected -= Hide;
-            _farmController.ProductionBuilt -= Show;
+            _farmController.ProductionAreaChoices -= Hide;
+            _farmController.ProductionAreaCanceled -= Show;
+            _farmController.ProductionAreaBuilt -= Show;
             _farmController.ProductAreaDeselected -= Show;
             _farmController.ProductAreaSelected -= OnProductAreaSelected;
             _openButton.onClick.RemoveListener(OpenShop);

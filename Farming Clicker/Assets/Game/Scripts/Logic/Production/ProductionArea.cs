@@ -18,27 +18,35 @@ namespace Game.Scripts.Logic.Production
     {
         public event Action<float, float> GrowthProgressUpdated;
         public event Action<ProductionState> StateChanged;
-        public event Action<ProductDropData> GrowthCompleted;
-        
+
         [SerializeField] private Transform _groundView;
         [SerializeField] private ProductionVisual _productionVisual;
+        [SerializeField] private ProductionAreaIndicator _productionIndicator;
 
         private ProductItemData _productItemData;
+        private ProductDropData _productDropData;
 
         private ProductType _productType;
         private ProductionState _currentState;
+        
 
         public void Init(ProductItemData productItemData, float areaSize)
         {
             _productItemData = productItemData;
+            _productDropData = new ProductDropData();
+
             _groundView.localScale = new Vector3(areaSize - 1, areaSize - 1, 0.1f);
             _productionVisual.Init(_productItemData.ViewMaterial);
+            _productionIndicator.Init(this);
             
             SetState(ProductionState.Idle);
         }
 
         public ProductItemData GetProductData() => 
             _productItemData;
+
+        public ProductDropData GetProductDropData() => 
+            _productDropData;
 
         public ProductionState GetProductionState() => 
             _currentState;
@@ -49,6 +57,15 @@ namespace Game.Scripts.Logic.Production
             StartCoroutine(GrowProductRoutine());
         }
 
+        public void ResetProduction()
+        {
+            SetState(ProductionState.Idle);
+            UpdateProductionVisual(0, _productItemData.GrowTime);
+            // добавляем продукцию в стор
+            
+            _productDropData = new ProductDropData();
+        }
+
         private IEnumerator GrowProductRoutine()
         {
             float elapsedTime = 0;
@@ -56,15 +73,20 @@ namespace Game.Scripts.Logic.Production
             while (elapsedTime < _productItemData.GrowTime)
             {
                 elapsedTime += Time.deltaTime;
-                _productionVisual.UpdateVisual(elapsedTime, _productItemData.GrowTime);
-                GrowthProgressUpdated?.Invoke(elapsedTime,  _productItemData.GrowTime);
+                UpdateProductionVisual(elapsedTime, _productItemData.GrowTime);
+                
                 yield return null;
             }
             
-            _productionVisual.UpdateVisual(elapsedTime, _productItemData.GrowTime);
-            GrowthProgressUpdated?.Invoke(elapsedTime, _productItemData.GrowTime);
-
+            UpdateProductionVisual(elapsedTime, _productItemData.GrowTime);
             GenerateProductDrop();
+            SetState(ProductionState.Complete);
+        }
+
+        private void UpdateProductionVisual(float elapsedTime, float maxTime)
+        {
+            _productionVisual.UpdateVisual(elapsedTime, maxTime);
+            GrowthProgressUpdated?.Invoke(elapsedTime, maxTime);
         }
 
         private void GenerateProductDrop()
@@ -73,26 +95,20 @@ namespace Game.Scripts.Logic.Production
 
             if (percent <= _productItemData.DropData.SeedDropChance)
             {
-                ProductDropData productDropData = new ProductDropData()
+                _productDropData = new ProductDropData()
                 {
                     DropType = ProductDropType.Seed,
                     DropAmount = _productItemData.DropData.SeedDropAmount
                 };
-
-                GrowthCompleted?.Invoke(productDropData);
             }
             else
             {
-                ProductDropData productDropData = new ProductDropData()
+                _productDropData = new ProductDropData()
                 {
                     DropType = ProductDropType.Coin,
                     DropAmount = _productItemData.DropData.CoinDropAmount
                 };
-
-                GrowthCompleted?.Invoke(productDropData);
             }
-            
-            SetState(ProductionState.Complete);
         }
 
         private void SetState(ProductionState newState)

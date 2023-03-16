@@ -61,10 +61,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _outlineVisual: {fileID: 1834546538307165470}
+  _selectProps:
+    OutlineVisual: {fileID: 1834546538307165470}
+    SpriteRenderer: {fileID: 1834546538524163249}
+    DefaultColor: {r: 1, g: 1, b: 1, a: 0.49019608}
+    SelectedColor: {r: 0, g: 1, b: 0.019607844, a: 0.5882353}
   _collider: {fileID: 6413467859600127797}
-  _debugMode: 1
+  _debugMode: 0
   _debugTransform: {fileID: 1834546538016040722}
   _text: {fileID: 1834546538016040720}
+  _cellState: 0
+  _selectMode: 0
 --- !u!1 &1834546538016040721
 GameObject:
   m_ObjectHideFlags: 0

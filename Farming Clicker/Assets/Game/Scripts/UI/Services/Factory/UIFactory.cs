@@ -34,7 +34,12 @@ namespace Game.Scripts.UI.Services.Factory
         public void CreateHUD()
         {
             GameObject hud = _assetProvider.Instantiate<GameObject>(AssetPath.UIHudPath, _uiRoot);
+            
             _shopButton = hud.GetComponentInChildren<OpenShopButton>();
+            
+            CancelAreaButton cancelButton = hud.GetComponentInChildren<CancelAreaButton>();
+            cancelButton.Init(_farmController);
+            cancelButton.Hide();
         }
 
         public void CreateShop()

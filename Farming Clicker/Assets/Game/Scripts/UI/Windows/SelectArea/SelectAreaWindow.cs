@@ -25,16 +25,11 @@ namespace Game.Scripts.UI.Windows.SelectArea
             _farmController.ProductAreaSelected += OnProductionAreaSelected;
             _productionCycle.Init();
             
-            _backButton.onClick.AddListener(Hide);
+            _backButton.onClick.AddListener(OnProductionAreaDeselect);
         }
 
-        public void Hide()
-        {
-            _farmController.DeselectArea();
-            _growthProgressBar.Stop();
-            
+        public void Hide() => 
             _canvasGroup.SetActive(false);
-        }
 
         private void OnProductionAreaSelected(ProductionArea productionArea)
         {
@@ -45,13 +40,21 @@ namespace Game.Scripts.UI.Windows.SelectArea
             Show();
         }
 
+        private void OnProductionAreaDeselect()
+        {
+            _farmController.DeselectArea();
+            _growthProgressBar.Stop();
+            
+            Hide();
+        }
+
         private void Show() => 
             _canvasGroup.SetActive(true);
 
         private void OnDestroy()
         {
             _farmController.ProductAreaSelected -= OnProductionAreaSelected;
-            _backButton.onClick.RemoveListener(Hide);
+            _backButton.onClick.RemoveListener(OnProductionAreaDeselect);
         }
     }
 }

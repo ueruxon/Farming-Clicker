@@ -387,6 +387,7 @@ GameObject:
   - component: {fileID: 2818134841305888207}
   - component: {fileID: 603137226945222842}
   - component: {fileID: 363885561616815262}
+  - component: {fileID: 4382874254602048655}
   m_Layer: 5
   m_Name: HarvestSeedButton
   m_TagString: Untagged
@@ -469,6 +470,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4382874254602048655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946219837889501652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c718d801e42143318f0e1f760c50d46a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _outline: {fileID: 8571951002148296768}
 --- !u!1 &5777134846302582759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,7 +1346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8113208, g: 0.6816694, b: 0.23344605, a: 1}
+  m_Color: {r: 0.8490566, g: 0.70483065, b: 0.19624422, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2138,6 +2152,7 @@ GameObject:
   - component: {fileID: 6345242455031563815}
   - component: {fileID: 6345242455031563817}
   - component: {fileID: 6345242455031563814}
+  - component: {fileID: 9114542534381589943}
   m_Layer: 5
   m_Name: HarvestCoinButton
   m_TagString: Untagged
@@ -2220,6 +2235,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9114542534381589943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6345242455031563812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c718d801e42143318f0e1f760c50d46a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _outline: {fileID: 6345242454260562826}
 --- !u!1 &6345242455100897074
 GameObject:
   m_ObjectHideFlags: 0
@@ -2308,6 +2336,7 @@ GameObject:
   - component: {fileID: 6345242455169400588}
   - component: {fileID: 6345242455169400590}
   - component: {fileID: 6345242455169400591}
+  - component: {fileID: 4359306814628222657}
   m_Layer: 5
   m_Name: WaterButton
   m_TagString: Untagged
@@ -2389,6 +2418,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4359306814628222657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6345242455169400589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c718d801e42143318f0e1f760c50d46a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _outline: {fileID: 6345242454421652438}
 --- !u!1 &7720632061629968672
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,8 @@ namespace Game.Scripts.Logic.GridLayout
     {
         Close,
         Open,
-        Occupied
+        Occupied,
+        Selected,
     }
     
     public class GridCell : MonoBehaviour, IPointerClickHandler
@@ -20,6 +21,7 @@ namespace Game.Scripts.Logic.GridLayout
         public event Action<Vector2Int> Clicked; 
 
         [SerializeField] private GameObject _outlineVisual;
+        [SerializeField] private SelectProperties _selectProps;
         [SerializeField] private BoxCollider _collider;
         [Space(4)]
         
@@ -42,8 +44,12 @@ namespace Game.Scripts.Logic.GridLayout
             _cellPosition = cellPosition;
 
             _collider.size = new Vector3(cellSize, 0.5f, cellSize);
-            _outlineVisual.transform.localScale = Vector3.one * cellSize;
-            _outlineVisual.SetActive(false);
+            
+            _selectProps.OutlineVisual.transform.localScale = Vector3.one * cellSize;
+            _selectProps.SpriteRenderer.color = _selectProps.DefaultColor;
+            _selectProps.OutlineVisual.SetActive(false);
+            //_outlineVisual.transform.localScale = Vector3.one * cellSize;
+            //_outlineVisual.SetActive(false);
             
             if (_debugMode)
                 DebugText();
@@ -54,7 +60,8 @@ namespace Game.Scripts.Logic.GridLayout
         public void SetSelectMode(SelectMode selectMode)
         {
             _selectMode = selectMode;
-            _outlineVisual.SetActive(selectMode == SelectMode.Global && IsAvailable());
+            //_outlineVisual.SetActive(selectMode == SelectMode.Global && IsAvailable());
+            _selectProps.OutlineVisual.SetActive(selectMode == SelectMode.Global && IsAvailable());
         }
 
         public void Open() => 
@@ -65,6 +72,24 @@ namespace Game.Scripts.Logic.GridLayout
 
         public bool IsAvailable() => 
             _cellState == CellState.Open;
+
+        public void Select(bool select)
+        {
+            if (select)
+            {
+                _cellState = CellState.Selected;
+                //_outlineVisual.SetActive(true);
+                _selectProps.SpriteRenderer.color = _selectProps.SelectedColor;
+                _selectProps.OutlineVisual.SetActive(true);
+            }
+            else
+            {
+                _cellState = CellState.Occupied;
+                //_outlineVisual.SetActive(false);
+                _selectProps.SpriteRenderer.color = _selectProps.DefaultColor;
+                _selectProps.OutlineVisual.SetActive(false);
+            }
+        }
 
         public void AddProductionArea(ProductionArea productionArea)
         {
@@ -86,7 +111,8 @@ namespace Game.Scripts.Logic.GridLayout
             if (_cellState == CellState.Occupied
                 && _selectMode == SelectMode.Local)
             {
-                _outlineVisual.SetActive(true);
+                //_outlineVisual.SetActive(true);
+                _selectProps.OutlineVisual.SetActive(true);
             }
 
             if (_cellState == CellState.Open && _selectMode == SelectMode.Global) 
@@ -98,7 +124,8 @@ namespace Game.Scripts.Logic.GridLayout
             if (_cellState == CellState.Occupied
                 && _selectMode == SelectMode.Local)
             {
-                _outlineVisual.SetActive(false);
+                //_outlineVisual.SetActive(false);
+                _selectProps.OutlineVisual.SetActive(false);
             }
             
             if (_cellState == CellState.Open && _selectMode == SelectMode.Global) 
@@ -120,5 +147,14 @@ namespace Game.Scripts.Logic.GridLayout
                 Clicked?.Invoke(_cellPosition);
             }
         }
+    }
+
+    [Serializable]
+    public class SelectProperties
+    {
+       public GameObject OutlineVisual;
+       public SpriteRenderer SpriteRenderer;
+       public Color DefaultColor;
+       public Color SelectedColor;
     }
 }

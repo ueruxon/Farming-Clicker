@@ -21,6 +21,9 @@ namespace Game.Scripts.UI.Windows.SelectArea
 
             _productionArea = productionArea;
             _productionArea.GrowthProgressUpdated += SetValue;
+
+            if (_productionArea.GetProductionState() == ProductionState.Complete)
+                _fillImage.fillAmount = 1;
         }
 
         private void SetValue(float current, float max) => 

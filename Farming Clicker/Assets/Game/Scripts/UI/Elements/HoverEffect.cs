@@ -17,5 +17,8 @@ namespace Game.Scripts.UI.Elements
 
         public void OnPointerExit(PointerEventData eventData) => 
             _outline.enabled = false;
+
+        public void OnDisable() => 
+            _outline.enabled = false;
     }
 }

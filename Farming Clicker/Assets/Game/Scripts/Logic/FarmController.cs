@@ -15,7 +15,9 @@ namespace Game.Scripts.Logic
     
     public class FarmController
     {
-        public event Action ProductionBuilt;
+        public event Action ProductionAreaChoices;
+        public event Action ProductionAreaCanceled;
+        public event Action ProductionAreaBuilt;
         public event Action<ProductionArea> ProductAreaSelected;
         public event Action ProductAreaDeselected;
 
@@ -28,6 +30,7 @@ namespace Game.Scripts.Logic
         private ProductType _activeProductType;
 
         private FarmState _farmState;
+        private GridCell _selectedCell;
 
         public FarmController(GameFactory gameFactory, GridSystem gridSystem)
         {
@@ -60,11 +63,28 @@ namespace Game.Scripts.Logic
             
             _areaGhost = _gameFactory.CreateAreaGhost(worldPoint);
             _gridSystem.SelectAllAvailableCell();
+            
+            ProductionAreaChoices?.Invoke();
+        }
+
+        public void CancelConstruction()
+        {
+            _areaGhost.Destroy();
+            _areaGhost = null;
+            _gridSystem.DeselectAllAvailableCell();
+            _activeProductType = ProductType.None;
+            
+            SetState(FarmState.Select);
+            
+            ProductionAreaCanceled?.Invoke();
         }
 
         public void DeselectArea()
         {
             SetState(FarmState.Select);
+            _selectedCell.Select(false);
+            _selectedCell = null;
+            
             ProductAreaDeselected?.Invoke();
         }
 
@@ -96,24 +116,25 @@ namespace Game.Scripts.Logic
         {
             if (_farmState == FarmState.Build)
             {
-                _areaGhost.Destroy();
-                _areaGhost = null;
-                _gridSystem.DeselectAllAvailableCell();
-            
                 CreateProductionArea(_activeProductType, cellPosition);
-                SetState(FarmState.Select);
-                
-                _activeProductType = ProductType.None;
-                
-                ProductionBuilt?.Invoke();
+                CancelConstruction();
+
+                ProductionAreaBuilt?.Invoke();
                 
                 return;
             }
 
             if (_farmState == FarmState.Select)
             {
-                GridCell cell = _gridSystem.GetGridCell(cellPosition);
-                ProductionArea productionArea = cell.GetProductionArea();
+                if (_selectedCell is not null)
+                {
+                    _selectedCell.Select(false);
+                    _selectedCell = null;
+                }
+                
+                _selectedCell = _gridSystem.GetGridCell(cellPosition);
+                _selectedCell.Select(true);
+                ProductionArea productionArea = _selectedCell.GetProductionArea();
                 
                 ProductAreaSelected?.Invoke(productionArea);
             }

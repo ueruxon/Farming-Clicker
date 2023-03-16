@@ -31,16 +31,18 @@ namespace Game.Scripts.UI.Windows.SelectArea
 
         public void SetProductionArea(ProductionArea productionArea)
         {
+            // отписываемся от предыдущей area?
             if (_productionArea is not null)
             {
+                if (Equals(_productionArea, productionArea))
+                    return;
+
                 _productionArea.StateChanged -= OnProductionStateChanged;
-                _productionArea.GrowthCompleted -= UpdateHarvestButton;
             }
-            
+
             _productionArea = productionArea;
             _productionArea.StateChanged += OnProductionStateChanged;
-            _productionArea.GrowthCompleted += UpdateHarvestButton;
-            
+
             OnProductionStateChanged(_productionArea.GetProductionState());
         }
 
@@ -57,6 +59,8 @@ namespace Game.Scripts.UI.Windows.SelectArea
                     _growingText.gameObject.SetActive(true);
                     break;
                 case ProductionState.Complete:
+                    ProductDropData productDropData = _productionArea.GetProductDropData();
+                    UpdateHarvestButton(productDropData);
                     break;
             }
         }
@@ -71,25 +75,19 @@ namespace Game.Scripts.UI.Windows.SelectArea
             
             if (dropData.DropType == ProductDropType.Coin)
             {
-                _seedCounter.SetText($"{dropData.DropAmount.ToString()} COINS READY");
+                _coinCounter.SetText($"{dropData.DropAmount.ToString()} COINS READY");
                 _harvestCoinButton.gameObject.SetActive(true);
             }
         }
         
-        private void OnWaterClick()
-        {
+        private void OnWaterClick() => 
             _productionArea.ActivateProduction();
-        }
 
-        private void OnCoinClick()
-        {
-            
-        }
-        
-        private void OnSeedClick()
-        {
-            
-        }
+        private void OnCoinClick() => 
+            _productionArea.ResetProduction();
+
+        private void OnSeedClick() => 
+            _productionArea.ResetProduction();
 
         private void HideAllButtons()
         {
