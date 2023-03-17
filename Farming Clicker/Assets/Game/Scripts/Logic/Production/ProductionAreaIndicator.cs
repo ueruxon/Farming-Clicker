@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Scripts.Common.Extensions;
+using Game.Scripts.Infrastructure.Services.Progress;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -53,12 +54,12 @@ namespace Game.Scripts.Logic.Production
         private void UpdateHarvestButton(ProductDropData dropData)
         {
             _counter.SetText($"{dropData.DropAmount.ToString()}");
-            _counter.gameObject.SetActive(true);
+            _counter.gameObject.SetActive(dropData.DropAmount > 1);
             
             // сюда проверка апгрейдов?
-            if (dropData.DropType == ProductDropType.Seed) 
+            if (dropData.DropType == ResourceType.Seed) 
                 _seedButton.gameObject.SetActive(true);
-            if (dropData.DropType == ProductDropType.Coin) 
+            if (dropData.DropType == ResourceType.Coin) 
                 _coinButton.gameObject.SetActive(true);
         }
 

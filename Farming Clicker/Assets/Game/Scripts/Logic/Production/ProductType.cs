@@ -13,10 +13,4 @@
         Peppers,
         Blueberries
     }
-
-    public enum ProductDropType
-    {
-        Seed,
-        Coin
-    }
 }

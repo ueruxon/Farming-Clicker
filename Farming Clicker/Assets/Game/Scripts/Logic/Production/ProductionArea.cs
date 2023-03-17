@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using Game.Scripts.Data.Game;
 using Game.Scripts.Data.StaticData.Product;
+using Game.Scripts.Infrastructure.Services.Progress;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,6 +25,7 @@ namespace Game.Scripts.Logic.Production
         [SerializeField] private ProductionVisual _productionVisual;
         [SerializeField] private ProductionAreaIndicator _productionIndicator;
 
+        private ResourceRepository _resourceRepository;
         private ProductItemData _productItemData;
         private ProductDropData _productDropData;
 
@@ -30,8 +33,9 @@ namespace Game.Scripts.Logic.Production
         private ProductionState _currentState;
         
 
-        public void Init(ProductItemData productItemData, float areaSize)
+        public void Init(IGameProgressService progressService, ProductItemData productItemData, float areaSize)
         {
+            _resourceRepository = progressService.Progress.ResourceRepository;
             _productItemData = productItemData;
             _productDropData = new ProductDropData();
 
@@ -61,8 +65,8 @@ namespace Game.Scripts.Logic.Production
         {
             SetState(ProductionState.Idle);
             UpdateProductionVisual(0, _productItemData.GrowTime);
-            // добавляем продукцию в стор
-            
+
+            _resourceRepository.AddResource(_productDropData.DropType, _productDropData.DropAmount);
             _productDropData = new ProductDropData();
         }
 
@@ -97,7 +101,7 @@ namespace Game.Scripts.Logic.Production
             {
                 _productDropData = new ProductDropData()
                 {
-                    DropType = ProductDropType.Seed,
+                    DropType = ResourceType.Seed,
                     DropAmount = _productItemData.DropData.SeedDropAmount
                 };
             }
@@ -105,7 +109,7 @@ namespace Game.Scripts.Logic.Production
             {
                 _productDropData = new ProductDropData()
                 {
-                    DropType = ProductDropType.Coin,
+                    DropType = ResourceType.Coin,
                     DropAmount = _productItemData.DropData.CoinDropAmount
                 };
             }
@@ -120,7 +124,7 @@ namespace Game.Scripts.Logic.Production
 
     public class ProductDropData
     {
-        public ProductDropType DropType;
+        public ResourceType DropType;
         public int DropAmount;
     }
 }

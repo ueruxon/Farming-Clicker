@@ -43,7 +43,7 @@ namespace Game.Scripts.UI.Windows.Shop
         {
             if (data.DataType == ShopDataType.Product)
             {
-                _farmController.CreateGhostArea(data.ProductType);
+                _farmController.BuildProductionArea(data.ProductType);
                 Close();
                 
                 ShopItemSelected?.Invoke();

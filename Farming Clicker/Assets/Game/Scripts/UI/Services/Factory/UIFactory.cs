@@ -1,6 +1,7 @@
 ﻿using Game.Scripts.Data;
 using Game.Scripts.Data.StaticData;
 using Game.Scripts.Infrastructure.Services.AssetManagement;
+using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
 using Game.Scripts.Logic.Production;
@@ -16,16 +17,20 @@ namespace Game.Scripts.UI.Services.Factory
         private readonly IAssetProvider _assetProvider;
         private readonly IStaticDataService _staticDataService;
         private readonly FarmController _farmController;
+        private readonly IGameProgressService _gameProgressService;
 
         private Transform _uiRoot;
         private OpenShopButton _shopButton;
 
         public UIFactory(IAssetProvider assetProvider,
-            IStaticDataService staticDataService, FarmController farmController)
+            IStaticDataService staticDataService,
+            FarmController farmController, 
+            IGameProgressService gameProgressService)
         {
             _assetProvider = assetProvider;
             _staticDataService = staticDataService;
             _farmController = farmController;
+            _gameProgressService = gameProgressService;
         }
         
         public void CreateUIRoot() => 
@@ -40,6 +45,9 @@ namespace Game.Scripts.UI.Services.Factory
             CancelAreaButton cancelButton = hud.GetComponentInChildren<CancelAreaButton>();
             cancelButton.Init(_farmController);
             cancelButton.Hide();
+
+            ResourceCounter counter = hud.GetComponentInChildren<ResourceCounter>();
+            counter.Init(_gameProgressService);
         }
 
         public void CreateShop()
@@ -63,7 +71,7 @@ namespace Game.Scripts.UI.Services.Factory
                 farmData.DataType = shopDataType;
             }
             
-            shopItem.Init(shopItemData, farmData);
+            shopItem.Init(shopItemData, farmData, _gameProgressService);
             
             return shopItem;
         }

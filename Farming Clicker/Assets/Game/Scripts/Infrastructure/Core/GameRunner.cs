@@ -1,9 +1,11 @@
+using Game.Scripts.Common;
 using Game.Scripts.Data;
+using Game.Scripts.Data.Game;
 using UnityEngine;
 
 namespace Game.Scripts.Infrastructure.Core
 {
-    public class GameRunner : MonoBehaviour
+    public class GameRunner : MonoBehaviour, ICoroutineRunner
     {
         [SerializeField] private GameConfig _gameConfig;
         [SerializeField] private Transform _gridContainer;
@@ -12,7 +14,7 @@ namespace Game.Scripts.Infrastructure.Core
         
         private void Awake()
         {
-            _gameInstaller = new GameInstaller(_gameConfig, _gridContainer);
+            _gameInstaller = new GameInstaller(_gameConfig, _gridContainer, this);
         }
     }
 }

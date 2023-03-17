@@ -862,10 +862,18 @@ MonoBehaviour:
   _button: {fileID: 5086623729283797617}
   _title: {fileID: 5086623729208834143}
   _icon: {fileID: 5086623728354517407}
-  _seedContainer: {fileID: 5086623728928985580}
-  _seedCount: {fileID: 5086623729445448118}
-  _coinContainer: {fileID: 5086623728425074981}
-  _coinCount: {fileID: 5086623727522692127}
+  _seedConfig:
+    Container: {fileID: 5086623728928985580}
+    Name: {fileID: 5086623729598019566}
+    Counter: {fileID: 5086623729445448118}
+    DefaultColor: {r: 1, g: 1, b: 1, a: 1}
+    DangerColor: {r: 1, g: 0.24313726, b: 0.1764706, a: 1}
+  _coinConfig:
+    Container: {fileID: 5086623728425074981}
+    Name: {fileID: 5086623728132454288}
+    Counter: {fileID: 5086623727522692127}
+    DefaultColor: {r: 1, g: 1, b: 1, a: 1}
+    DangerColor: {r: 1, g: 0.24313726, b: 0.1764706, a: 1}
 --- !u!114 &5086623729283797582
 MonoBehaviour:
   m_ObjectHideFlags: 0

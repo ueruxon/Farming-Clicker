@@ -15,18 +15,16 @@ namespace Game.Scripts.UI.Elements
             _farmController = farmController;
             _farmController.ProductionAreaChoices += Show;
             _farmController.ProductionAreaCanceled += Hide;
+            _farmController.ProductionAreaBuilt += Hide;
             
             _button.onClick.AddListener(OnCancelArea);
         }
 
-        public void Show() => 
-            gameObject.SetActive(true);
-
         public void Hide() => 
             gameObject.SetActive(false);
 
-        private void OnProductionAreaChoices() => 
-            Show();
+        private void Show() => 
+            gameObject.SetActive(true);
 
         private void OnCancelArea() => 
             _farmController.CancelConstruction();
@@ -36,6 +34,7 @@ namespace Game.Scripts.UI.Elements
             _button.onClick.RemoveListener(OnCancelArea);
             _farmController.ProductionAreaChoices -= Show;
             _farmController.ProductionAreaCanceled -= Hide;
+            _farmController.ProductionAreaBuilt -= Hide;
         }
     }
 }

@@ -1,6 +1,11 @@
 ﻿using System;
 using Game.Scripts.Data;
+using Game.Scripts.Data.StaticData;
+using Game.Scripts.Data.StaticData.Product;
 using Game.Scripts.Infrastructure.Services.Factory;
+using Game.Scripts.Infrastructure.Services.Progress;
+using Game.Scripts.Infrastructure.Services.StaticData;
+using Game.Scripts.Logic.Cameras;
 using Game.Scripts.Logic.GridLayout;
 using Game.Scripts.Logic.Production;
 using UnityEngine;
@@ -22,9 +27,10 @@ namespace Game.Scripts.Logic
         public event Action ProductAreaDeselected;
 
         private readonly GameFactory _gameFactory;
+        private readonly IGameProgressService _progressService;
+        private readonly IStaticDataService _staticDataService;
         private readonly GridSystem _gridSystem;
-
-        private Camera _mainCamera;
+        private readonly Camera _mainCamera;
         
         private ProductionAreaGhost _areaGhost;
         private ProductType _activeProductType;
@@ -32,8 +38,13 @@ namespace Game.Scripts.Logic
         private FarmState _farmState;
         private GridCell _selectedCell;
 
-        public FarmController(GameFactory gameFactory, GridSystem gridSystem)
+        public FarmController(IGameProgressService progressService, 
+            IStaticDataService staticDataService, 
+            GameFactory gameFactory, 
+            GridSystem gridSystem)
         {
+            _progressService = progressService;
+            _staticDataService = staticDataService;
             _gameFactory = gameFactory;
             _gridSystem = gridSystem;
             _mainCamera = Camera.main;
@@ -52,29 +63,18 @@ namespace Game.Scripts.Logic
             SetState(FarmState.Select);
         }
 
-        public void CreateGhostArea(ProductType productType)
+        public void BuildProductionArea(ProductType productType)
         {
             SetState(FarmState.Build);
             _activeProductType = productType;
-            
-            Vector3 mousePosition = Input.mousePosition;
-            mousePosition.z = _mainCamera.nearClipPlane;
-            Vector3 worldPoint = _mainCamera.ScreenToWorldPoint(mousePosition);
-            
-            _areaGhost = _gameFactory.CreateAreaGhost(worldPoint);
-            _gridSystem.SelectAllAvailableCell();
-            
-            ProductionAreaChoices?.Invoke();
+
+            CreateGhostArea();
         }
 
         public void CancelConstruction()
         {
-            _areaGhost.Destroy();
-            _areaGhost = null;
-            _gridSystem.DeselectAllAvailableCell();
-            _activeProductType = ProductType.None;
-            
-            SetState(FarmState.Select);
+            ReturnResourceForConstruction(_activeProductType);
+            ClearAreaGhost();
             
             ProductionAreaCanceled?.Invoke();
         }
@@ -86,6 +86,34 @@ namespace Game.Scripts.Logic
             _selectedCell = null;
             
             ProductAreaDeselected?.Invoke();
+        }
+
+        private void ReturnResourceForConstruction(ProductType productType)
+        {
+            PriceAmount productPriceData = _staticDataService.GetDataForProduct(productType).Price;
+            _progressService.Progress.ResourceRepository.AddResource(ResourceType.Seed, productPriceData.SeedPrice);
+            _progressService.Progress.ResourceRepository.AddResource(ResourceType.Coin, productPriceData.CoinPrice);
+        }
+
+        private void CreateGhostArea()
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            mousePosition.z = _mainCamera.nearClipPlane;
+            Vector3 worldPoint = _mainCamera.ScreenToWorldPoint(mousePosition);
+            
+            _areaGhost = _gameFactory.CreateAreaGhost(worldPoint);
+            _gridSystem.SelectAllAvailableCell();
+            
+            ProductionAreaChoices?.Invoke();
+        }
+
+        private void ClearAreaGhost()
+        {
+            _areaGhost.Destroy();
+            _areaGhost = null;
+            _gridSystem.DeselectAllAvailableCell();
+            _activeProductType = ProductType.None;
+            SetState(FarmState.Select);
         }
 
         private void CreateProductionArea(ProductType productType, Vector2Int cellPosition)
@@ -117,7 +145,7 @@ namespace Game.Scripts.Logic
             if (_farmState == FarmState.Build)
             {
                 CreateProductionArea(_activeProductType, cellPosition);
-                CancelConstruction();
+                ClearAreaGhost();
 
                 ProductionAreaBuilt?.Invoke();
                 
@@ -135,7 +163,7 @@ namespace Game.Scripts.Logic
                 _selectedCell = _gridSystem.GetGridCell(cellPosition);
                 _selectedCell.Select(true);
                 ProductionArea productionArea = _selectedCell.GetProductionArea();
-                
+
                 ProductAreaSelected?.Invoke(productionArea);
             }
         }

@@ -1,4 +1,5 @@
-﻿using Game.Scripts.Data;
+﻿using Game.Scripts.Data.Game;
+using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
 using Game.Scripts.UI.Services.Factory;
@@ -9,28 +10,44 @@ namespace Game.Scripts.Infrastructure.Core
     {
         private readonly GameConfig _gameConfig;
         private readonly IStaticDataService _staticDataService;
+        private readonly IGameProgressService _gameProgressService;
         private readonly UIFactory _uiFactory;
         private readonly FarmController _farmController;
 
         public GameInitializer(GameConfig gameConfig,
             IStaticDataService staticDataService,
+            IGameProgressService gameProgressService,
             UIFactory uiFactory,
             FarmController farmController)
         {
             _gameConfig = gameConfig;
             _staticDataService = staticDataService;
+            _gameProgressService = gameProgressService;
             _uiFactory = uiFactory;
             _farmController = farmController;
 
+            LoadProgressOrInitNew();
             InitializeSystems();
             InitUI();
             InitGameWorld();
         }
+        
+        // async
+        private void LoadProgressOrInitNew() => 
+            _gameProgressService.Progress = NewProgress();
 
-        private void InitializeSystems()
+        private GameProgress NewProgress()
         {
-            _staticDataService.Init();
+            GameProgress progress = new GameProgress();
+
+            foreach (ResourceData resourceData in _gameConfig.GetInitialResources())
+                progress.ResourceRepository.AddResource(resourceData.ResourceType, resourceData.Amount);
+
+            return progress;
         }
+
+        private void InitializeSystems() => 
+            _staticDataService.Init();
 
         private void InitUI()
         {
@@ -40,9 +57,7 @@ namespace Game.Scripts.Infrastructure.Core
             _uiFactory.CreateSelectProductArea();
         }
 
-        private void InitGameWorld()
-        {
+        private void InitGameWorld() => 
             _farmController.InitFarm();
-        }
     }
 }
