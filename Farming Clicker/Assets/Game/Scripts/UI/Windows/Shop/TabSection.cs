@@ -2,19 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Game.Scripts.Common.Extensions;
 using Game.Scripts.Data;
 using Game.Scripts.Data.StaticData;
 using Game.Scripts.Infrastructure.Services.StaticData;
-using Game.Scripts.Logic;
 using Game.Scripts.UI.Services.Factory;
 using UnityEngine;
 
 namespace Game.Scripts.UI.Windows.Shop
 {
-    public class ShopSection : MonoBehaviour
+    public class TabSection : MonoBehaviour
     {
-        public event Action<FarmData> ItemClicked; 
+        public event Action<FarmData> ItemClicked;
 
+        [SerializeField] private TabContentType _tabContentType;
+        [SerializeField] private CanvasGroup _canvasGroup;
+        [Space(2)]
         [SerializeField] private ShopNavigation _shopNavigation;
         [SerializeField] private InformationTooltip _informationTooltip;
         
@@ -55,7 +58,11 @@ namespace Game.Scripts.UI.Windows.Shop
             
             _informationTooltip.Hide();
         }
-        
+
+        public TabContentType GetTabContentType() => _tabContentType;
+        public void Show() => _canvasGroup.SetActive(true);
+        public void Hide() => _canvasGroup.SetActive(false);
+
         private void CreateProductContent()
         {
             for (int i = 0; i < _shopProductItems.Count; i++)

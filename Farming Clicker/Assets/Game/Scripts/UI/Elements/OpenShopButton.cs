@@ -17,7 +17,6 @@ namespace Game.Scripts.UI.Elements
         public void Init(ShopWindow shopWindow, FarmController farmController)
         {
             _shopWindow = shopWindow;
-            //_shopWindow.ShopItemSelected += Hide;
 
             _farmController = farmController;
             _farmController.ProductionAreaChoices += Hide;

@@ -5,7 +5,7 @@ namespace Game.Scripts.Data.StaticData
     public abstract class ShopItemData : ScriptableObject
     {
         [Header("Base Shop Settings")]
-        public ShopDataType DataType;
+        //public ShopDataType DataType;
         public string Name;
         public Sprite Icon;
         public PriceAmount Price;

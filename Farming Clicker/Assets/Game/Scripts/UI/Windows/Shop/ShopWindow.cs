@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game.Scripts.Common.Extensions;
 using Game.Scripts.Data;
 using Game.Scripts.Data.StaticData;
@@ -12,12 +13,10 @@ namespace Game.Scripts.UI.Windows.Shop
 {
     public class ShopWindow : MonoBehaviour
     {
-        public event Action ShopItemSelected; 
-
         [SerializeField] private Button _closeButton;
         [SerializeField] private CanvasGroup _canvasGroup;
         [Space(2)]
-        [SerializeField] private ShopSection _shopSection;
+        [SerializeField] private TabGroup _tabGroup;
 
         private FarmController _farmController;
         
@@ -25,35 +24,26 @@ namespace Game.Scripts.UI.Windows.Shop
         {
             _farmController = farmController;
             
-            _shopSection.Init(staticDataService, factory);
-            _shopSection.ItemClicked += OnItemClicked;
-
+            _tabGroup.Init(staticDataService, factory);
+            _tabGroup.ItemSelected += OnItemSelected;
             _closeButton.onClick.AddListener(CloseShop);
         }
 
-        public void Open()
-        {
-            _canvasGroup.SetActive(true);
-        }
+        public void Open() => _canvasGroup.SetActive(true);
+        public void Close() => _canvasGroup.SetActive(false);
 
-        public void Close() => 
-            _canvasGroup.SetActive(false);
-
-        private void OnItemClicked(FarmData data)
+        private void OnItemSelected(FarmData data)
         {
             if (data.DataType == ShopDataType.Product)
             {
                 _farmController.BuildProductionArea(data.ProductType);
                 Close();
-                
-                ShopItemSelected?.Invoke();
             }
         }
 
-        private void CloseShop() => 
-            Close();
+        private void CloseShop() => Close();
 
         private void OnDestroy() => 
-            _shopSection.ItemClicked -= OnItemClicked;
+            _tabGroup.ItemSelected -= OnItemSelected;
     }
 }
