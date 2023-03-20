@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game.Scripts.Data;
 using Game.Scripts.Data.StaticData;
 using Game.Scripts.Data.StaticData.Product;
+using Game.Scripts.Data.StaticData.Upgrades;
 using Game.Scripts.Infrastructure.Services.Factory;
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic.Cameras;
 using Game.Scripts.Logic.GridLayout;
 using Game.Scripts.Logic.Production;
+using Game.Scripts.Logic.Upgrades;
 using UnityEngine;
 
 namespace Game.Scripts.Logic
@@ -31,7 +34,7 @@ namespace Game.Scripts.Logic
         private readonly IStaticDataService _staticDataService;
         private readonly GridSystem _gridSystem;
         private readonly Camera _mainCamera;
-        
+
         private ProductionAreaGhost _areaGhost;
         private ProductType _activeProductType;
 
@@ -50,7 +53,10 @@ namespace Game.Scripts.Logic
             _mainCamera = Camera.main;
         }
 
-        public void InitFarm()
+        public void Init() => 
+            _progressService.Progress.UpgradeRepository.UpgradePurchased += OnSomeUpgradePurchased;
+
+        public void CreateFarm()
         {
             GridCell[,] grid = _gridSystem.CreateGrid();
             foreach (GridCell cell in grid)
@@ -86,6 +92,14 @@ namespace Game.Scripts.Logic
             _selectedCell = null;
             
             ProductAreaDeselected?.Invoke();
+        }
+
+        private void OnSomeUpgradePurchased()
+        {
+            List<Upgrade> upgrades = 
+                _progressService.Progress.UpgradeRepository.GetPurchasedUpgrades(UpgradeGroup.FarmExpansion);
+
+            _gridSystem.OpenGridCells(upgrades.Count);
         }
 
         private void ReturnResourceForConstruction(ProductType productType)
@@ -170,5 +184,8 @@ namespace Game.Scripts.Logic
 
         private void SetState(FarmState newState) => 
             _farmState = newState;
+        
+        public void Cleanup() =>
+            _progressService.Progress.UpgradeRepository.UpgradePurchased -= OnSomeUpgradePurchased;
     }
 }

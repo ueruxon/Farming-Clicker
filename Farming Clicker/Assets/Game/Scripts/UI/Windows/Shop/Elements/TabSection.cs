@@ -3,17 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Game.Scripts.Common.Extensions;
-using Game.Scripts.Data;
 using Game.Scripts.Data.StaticData;
 using Game.Scripts.Infrastructure.Services.StaticData;
+using Game.Scripts.Logic.Upgrades;
 using Game.Scripts.UI.Services.Factory;
 using UnityEngine;
 
-namespace Game.Scripts.UI.Windows.Shop
+namespace Game.Scripts.UI.Windows.Shop.Elements
 {
     public class TabSection : MonoBehaviour
     {
-        public event Action<FarmData> ItemClicked;
+        public event Action<TabContentType, ShopItemData> ItemClicked;
 
         [SerializeField] private TabContentType _tabContentType;
         [SerializeField] private CanvasGroup _canvasGroup;
@@ -31,31 +31,33 @@ namespace Game.Scripts.UI.Windows.Shop
 
         private IStaticDataService _staticDataService;
         private UIFactory _uiFactory;
+        private UpgradesHandler _upgradesHandler;
 
         private List<RectTransform> _shopContents;
-        private List<ShopItemData> _shopProductItems;
-        private List<ShopItem> _shopItems;
+        private List<ShopItemData> _contentShopItems;
+        private List<ShopItem> _allShopItems;
+
+        private ShopDataType _dataType;
         
         private int _currentContentIndex;
         
-        public void Init(IStaticDataService staticDataService, UIFactory uiFactory)
+        public void Init(IStaticDataService staticDataService, UIFactory uiFactory, UpgradesHandler upgradesHandler)
         {
             _staticDataService = staticDataService;
             _uiFactory = uiFactory;
+            _upgradesHandler = upgradesHandler;
+            _dataType = _tabContentType == TabContentType.Products ? ShopDataType.Product : ShopDataType.Upgrade;
 
             _currentContentIndex = 0;
             _shopContents = new List<RectTransform>();
-            _shopItems = new List<ShopItem>();
-            _shopProductItems = _staticDataService.GetDataForShop(ShopDataType.Product)
-                .OrderBy(x => x.Price.CoinPrice)
-                .ToList();
-
-            CreateProductContent();
+            _allShopItems = new List<ShopItem>();
+            
+            CreateContentShopItems();
+            CreateContent();
             CreateShopItems();
             
             _shopNavigation.Init(_shopContents.Count, _currentContentIndex);
             _shopNavigation.ContentIndexChanged += OnContentUpdate;
-            
             _informationTooltip.Hide();
         }
 
@@ -63,9 +65,28 @@ namespace Game.Scripts.UI.Windows.Shop
         public void Show() => _canvasGroup.SetActive(true);
         public void Hide() => _canvasGroup.SetActive(false);
 
-        private void CreateProductContent()
+        private void CreateContentShopItems()
         {
-            for (int i = 0; i < _shopProductItems.Count; i++)
+            if (_dataType == ShopDataType.Product)
+            {
+                _contentShopItems = _staticDataService.GetDataForShop(ShopDataType.Product)
+                    .OrderBy(x => x.Price.CoinPrice)
+                    .ToList();
+            }
+
+            if (_dataType == ShopDataType.Upgrade)
+            {
+                _contentShopItems = 
+                    _upgradesHandler.GetAvailableUpgrades()
+                        .OrderBy(x => x.Price.CoinPrice)
+                        .Select(x => x as ShopItemData)
+                        .ToList();
+            }
+        }
+        
+        private void CreateContent()
+        {
+            for (int i = 0; i < _contentShopItems.Count; i++)
             {
                 if (i % 6 == 0)
                 {
@@ -89,23 +110,23 @@ namespace Game.Scripts.UI.Windows.Shop
         private void CreateShopItems()
         {
             int contentIndex = 0;
-            for (int i = 0; i < _shopProductItems.Count; i++)
+            for (int i = 0; i < _contentShopItems.Count; i++)
             {
                 if (i > 0 && i % 6 == 0) 
                     contentIndex++;
 
-                ShopItemData shopItemData = _shopProductItems[i];
+                ShopItemData shopItemData = _contentShopItems[i];
                 RectTransform content = _shopContents[contentIndex];
-                ShopItem shopItem = _uiFactory.CreateShopItem(shopItemData, content.transform, ShopDataType.Product);
+                ShopItem shopItem = _uiFactory.CreateShopItem(shopItemData, content.transform, _dataType);
                 shopItem.Clicked += OnShopItemClicked;
                 shopItem.Hovered += OnShopItemHovered;
 
-                _shopItems.Add(shopItem);
+                _allShopItems.Add(shopItem);
             }
         }
 
-        private void OnShopItemClicked(FarmData data) => 
-            ItemClicked?.Invoke(data);
+        private void OnShopItemClicked(ShopItemData shopItemData) => 
+            ItemClicked?.Invoke(_tabContentType, shopItemData);
 
         private void OnShopItemHovered(ShopItemData shopData, bool hover)
         {
@@ -162,7 +183,7 @@ namespace Game.Scripts.UI.Windows.Shop
         {
             _shopNavigation.ContentIndexChanged -= OnContentUpdate;
 
-            foreach (ShopItem shopItem in _shopItems)
+            foreach (ShopItem shopItem in _allShopItems)
             {
                 shopItem.Clicked -= OnShopItemClicked;
                 shopItem.Hovered -= OnShopItemHovered;

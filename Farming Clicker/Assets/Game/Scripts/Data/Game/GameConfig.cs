@@ -10,7 +10,7 @@ namespace Game.Scripts.Data.Game
     public class GameConfig : ScriptableObject
     {
         [Header("Default Settings")]
-        [SerializeField] private int _penCellByDefault = 6;
+        [SerializeField] private int _openCellByDefault = 6;
         [SerializeField] private List<ResourceData> _initialResources;
 
         [Space(2)]
@@ -21,7 +21,7 @@ namespace Game.Scripts.Data.Game
         public float CellSize = 2;
         
         public int OpenCellByDefault => 
-            Mathf.Clamp(_penCellByDefault, 0, Width * Height);
+            Mathf.Clamp(_openCellByDefault, 0, Width * Height);
 
         public List<ResourceData> GetInitialResources() => 
             _initialResources;

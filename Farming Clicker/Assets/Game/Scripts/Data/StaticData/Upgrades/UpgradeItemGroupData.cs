@@ -6,6 +6,7 @@ namespace Game.Scripts.Data.StaticData.Upgrades
     [CreateAssetMenu(fileName = "Upgrade", menuName = "Upgrades/New Upgrade Group")]
     public class UpgradeItemGroupData : ScriptableObject
     {
-        [SerializeField] private List<UpgradeItemData> _upgradeItemsData;
+        public List<UpgradeItemData> UpgradeItemsData;
+        public UpgradeGroup UpgradeGroup;
     }
 }

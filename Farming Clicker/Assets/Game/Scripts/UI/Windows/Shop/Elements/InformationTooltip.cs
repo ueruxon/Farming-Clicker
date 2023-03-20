@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace Game.Scripts.UI.Windows.Shop
+namespace Game.Scripts.UI.Windows.Shop.Elements
 {
     public class InformationTooltip : MonoBehaviour
     {

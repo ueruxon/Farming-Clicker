@@ -7,6 +7,7 @@
         public const string ProductAreaGhostPath = "Prefabs/ProductionAreaGhost";
         
         public const string UpgradesDataPath = "StaticData/Upgrades";
+        public const string UpgradesGroupsDataPath = "StaticData/Upgrades/Groups";
         
         public const string UIRootPath = "UI/UIRoot";
         public const string UIHudPath = "UI/HUD";

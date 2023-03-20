@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Scripts.UI.Windows.Shop
+namespace Game.Scripts.UI.Windows.Shop.Elements
 {
     public class TabButton : MonoBehaviour
     {

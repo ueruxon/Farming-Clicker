@@ -2,6 +2,7 @@
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
+using Game.Scripts.Logic.Upgrades;
 using Game.Scripts.UI.Services.Factory;
 
 namespace Game.Scripts.Infrastructure.Core
@@ -13,18 +14,21 @@ namespace Game.Scripts.Infrastructure.Core
         private readonly IGameProgressService _gameProgressService;
         private readonly UIFactory _uiFactory;
         private readonly FarmController _farmController;
+        private readonly UpgradesHandler _upgradesHandler;
 
         public GameInitializer(GameConfig gameConfig,
             IStaticDataService staticDataService,
             IGameProgressService gameProgressService,
             UIFactory uiFactory,
-            FarmController farmController)
+            FarmController farmController, 
+            UpgradesHandler upgradesHandler)
         {
             _gameConfig = gameConfig;
             _staticDataService = staticDataService;
             _gameProgressService = gameProgressService;
             _uiFactory = uiFactory;
             _farmController = farmController;
+            _upgradesHandler = upgradesHandler;
 
             LoadProgressOrInitNew();
             InitializeSystems();
@@ -46,8 +50,12 @@ namespace Game.Scripts.Infrastructure.Core
             return progress;
         }
 
-        private void InitializeSystems() => 
+        private void InitializeSystems()
+        {
             _staticDataService.Init();
+            _upgradesHandler.Init();
+            _farmController.Init();
+        }
 
         private void InitUI()
         {
@@ -58,6 +66,6 @@ namespace Game.Scripts.Infrastructure.Core
         }
 
         private void InitGameWorld() => 
-            _farmController.InitFarm();
+            _farmController.CreateFarm();
     }
 }

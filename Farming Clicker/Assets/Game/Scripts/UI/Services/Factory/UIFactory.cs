@@ -1,13 +1,17 @@
 ﻿using Game.Scripts.Data;
 using Game.Scripts.Data.StaticData;
+using Game.Scripts.Data.StaticData.Product;
+using Game.Scripts.Data.StaticData.Upgrades;
 using Game.Scripts.Infrastructure.Services.AssetManagement;
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
 using Game.Scripts.Logic.Production;
+using Game.Scripts.Logic.Upgrades;
 using Game.Scripts.UI.Elements;
 using Game.Scripts.UI.Windows.SelectArea;
 using Game.Scripts.UI.Windows.Shop;
+using Game.Scripts.UI.Windows.Shop.Elements;
 using UnityEngine;
 
 namespace Game.Scripts.UI.Services.Factory
@@ -16,23 +20,27 @@ namespace Game.Scripts.UI.Services.Factory
     {
         private readonly IAssetProvider _assetProvider;
         private readonly IStaticDataService _staticDataService;
-        private readonly FarmController _farmController;
         private readonly IGameProgressService _gameProgressService;
+        private readonly FarmController _farmController;
+        private readonly UpgradesHandler _upgradesHandler;
 
         private Transform _uiRoot;
-        private OpenShopButton _shopButton;
 
         public UIFactory(IAssetProvider assetProvider,
             IStaticDataService staticDataService,
-            FarmController farmController, 
-            IGameProgressService gameProgressService)
+            IGameProgressService gameProgressService,
+            FarmController farmController,
+            UpgradesHandler upgradesHandler)
         {
             _assetProvider = assetProvider;
             _staticDataService = staticDataService;
             _farmController = farmController;
+            _upgradesHandler = upgradesHandler;
             _gameProgressService = gameProgressService;
         }
-        
+
+        private OpenShopButton _shopButton;
+
         public void CreateUIRoot() => 
             _uiRoot = _assetProvider.Instantiate<GameObject>(AssetPath.UIRootPath).transform;
 
@@ -53,7 +61,7 @@ namespace Game.Scripts.UI.Services.Factory
         public void CreateShop()
         {
             ShopWindow shopWindow = _assetProvider.Instantiate<ShopWindow>(AssetPath.UIShopWindowPath, _uiRoot);
-            shopWindow.Init(_staticDataService, this, _farmController);
+            shopWindow.Init(_staticDataService, this, _farmController, _upgradesHandler);
             shopWindow.Close();
             
             _shopButton.Init(shopWindow, _farmController);
@@ -62,17 +70,8 @@ namespace Game.Scripts.UI.Services.Factory
         public ShopItem CreateShopItem(ShopItemData shopItemData, Transform parent, ShopDataType shopDataType)
         {
             ShopItem shopItem = _assetProvider.Instantiate<ShopItem>(AssetPath.UIShopItemPath, parent);
-            FarmData farmData = new FarmData();
+            shopItem.Init(_gameProgressService, shopItemData);
 
-            if (shopDataType == ShopDataType.Product)
-            {
-                ProductType productType = _staticDataService.GetProductType(shopItemData.Name);
-                farmData.ProductType = productType;
-                farmData.DataType = shopDataType;
-            }
-            
-            shopItem.Init(shopItemData, farmData, _gameProgressService);
-            
             return shopItem;
         }
 

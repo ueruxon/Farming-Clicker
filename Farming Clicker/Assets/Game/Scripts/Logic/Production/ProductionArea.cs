@@ -41,8 +41,8 @@ namespace Game.Scripts.Logic.Production
 
             _groundView.localScale = new Vector3(areaSize - 1, areaSize - 1, 0.1f);
             _productionVisual.Init(_productItemData.ViewMaterial);
-            _productionIndicator.Init(this);
-            
+            _productionIndicator.Init(this, progressService);
+
             SetState(ProductionState.Idle);
         }
 

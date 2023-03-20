@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Scripts.UI.Windows.SelectArea
+namespace Game.Scripts.UI.Windows.SelectArea.Elements
 {
     public enum ProductionButtonType
     {

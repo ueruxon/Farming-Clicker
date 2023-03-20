@@ -88,5 +88,23 @@ namespace Game.Scripts.Logic.GridLayout
             foreach (GridCell gridCell in _gridArray) 
                 gridCell.SetSelectMode(SelectMode.Local);
         }
+
+        public void OpenGridCells(int upgradesCount)
+        {
+            int openColumnCount = upgradesCount * _height;
+            int openCount = _openCellCountByDefault;
+            
+            Debug.Log($"openColumnCount: {openColumnCount}, openCount: {openCount}");
+
+            foreach (GridCell cell in _gridArray)
+            {
+                if (openCount < openColumnCount)
+                {
+                    cell.Open();
+                    Debug.Log("tuta");
+                    openCount++;
+                }
+            }
+        }
     }
 }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Scripts.UI.Windows.Shop
+namespace Game.Scripts.UI.Windows.Shop.Elements
 {
     public enum NavigationMode
     {
@@ -39,8 +39,8 @@ namespace Game.Scripts.UI.Windows.Shop
 
         private void UpdateView()
         {
-            _forwardButton.gameObject.SetActive(true);
-            _backwardButton.gameObject.SetActive(true);
+            _forwardButton.gameObject.SetActive(false);
+            _backwardButton.gameObject.SetActive(false);
 
             if (ActiveContentIndex == 0 && _contentCount > 0)
             {
@@ -48,7 +48,7 @@ namespace Game.Scripts.UI.Windows.Shop
                 _backwardButton.gameObject.SetActive(false);
             }
 
-            if (ActiveContentIndex == _contentCount)
+            if (ActiveContentIndex == _contentCount && _contentCount > 0)
             {
                 _forwardButton.gameObject.SetActive(false);
                 _backwardButton.gameObject.SetActive(true);

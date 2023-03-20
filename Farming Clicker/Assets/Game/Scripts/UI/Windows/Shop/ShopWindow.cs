@@ -5,7 +5,9 @@ using Game.Scripts.Data;
 using Game.Scripts.Data.StaticData;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
+using Game.Scripts.Logic.Upgrades;
 using Game.Scripts.UI.Services.Factory;
+using Game.Scripts.UI.Windows.Shop.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,13 +20,20 @@ namespace Game.Scripts.UI.Windows.Shop
         [Space(2)]
         [SerializeField] private TabGroup _tabGroup;
 
+        private IStaticDataService _staticDataService;
         private FarmController _farmController;
+        private UpgradesHandler _upgradesHandler;
         
-        public void Init(IStaticDataService staticDataService, UIFactory factory, FarmController farmController)
+        public void Init(IStaticDataService staticDataService, 
+            UIFactory factory, 
+            FarmController farmController, 
+            UpgradesHandler upgradesHandler)
         {
+            _staticDataService = staticDataService;
             _farmController = farmController;
+            _upgradesHandler = upgradesHandler;
             
-            _tabGroup.Init(staticDataService, factory);
+            _tabGroup.Init(staticDataService, factory, upgradesHandler);
             _tabGroup.ItemSelected += OnItemSelected;
             _closeButton.onClick.AddListener(CloseShop);
         }
@@ -32,12 +41,19 @@ namespace Game.Scripts.UI.Windows.Shop
         public void Open() => _canvasGroup.SetActive(true);
         public void Close() => _canvasGroup.SetActive(false);
 
-        private void OnItemSelected(FarmData data)
+        private void OnItemSelected(TabContentType contentType, ShopItemData shopItemData)
         {
-            if (data.DataType == ShopDataType.Product)
+            if (contentType == TabContentType.Products)
             {
+                var data = _staticDataService.GetDataForProduct(shopItemData.Name);
                 _farmController.BuildProductionArea(data.ProductType);
                 Close();
+            }
+
+            if (contentType == TabContentType.Upgrades)
+            {
+                var data = _staticDataService.GetDataForUpgrade(shopItemData.Name);
+                _upgradesHandler.UpgradePurchased(data.UpgradeType);
             }
         }
 

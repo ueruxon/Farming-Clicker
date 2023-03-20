@@ -1,11 +1,10 @@
-﻿using System;
-using Game.Scripts.Infrastructure.Services.Progress;
+﻿using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Logic.Production;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Scripts.UI.Windows.SelectArea
+namespace Game.Scripts.UI.Windows.SelectArea.Elements
 {
     public class ProductionCycleContent : MonoBehaviour
     {

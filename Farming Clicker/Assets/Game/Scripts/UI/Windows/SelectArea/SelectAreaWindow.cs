@@ -1,6 +1,7 @@
 ﻿using Game.Scripts.Common.Extensions;
 using Game.Scripts.Logic;
 using Game.Scripts.Logic.Production;
+using Game.Scripts.UI.Windows.SelectArea.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

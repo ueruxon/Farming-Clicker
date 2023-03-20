@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c615761283344c68149da4ad6f39bbb, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  _penCellByDefault: 100
+  _openCellByDefault: 3
   _initialResources:
   - ResourceType: 0
     Amount: 5
   - ResourceType: 1
-    Amount: 50
+    Amount: 5000
   CellPrefab: {fileID: 1834546537989561478, guid: ddd24453bb73452419ead0a64587375f,
     type: 3}
   Width: 6

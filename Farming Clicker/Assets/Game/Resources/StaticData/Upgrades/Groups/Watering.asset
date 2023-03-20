@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 979e2f3827844637969cf45ef6726bad, type: 3}
   m_Name: Watering
   m_EditorClassIdentifier: 
-  _upgradeItemsData:
+  UpgradeItemsData:
   - {fileID: 11400000, guid: ec971f753661ee342985722ac89380c7, type: 2}
   - {fileID: 11400000, guid: 0bbc8bebee3117a4c982b215ac46f7af, type: 2}
+  UpgradeGroup: 1

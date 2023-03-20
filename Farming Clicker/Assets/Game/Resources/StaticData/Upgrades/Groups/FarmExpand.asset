@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 979e2f3827844637969cf45ef6726bad, type: 3}
   m_Name: FarmExpand
   m_EditorClassIdentifier: 
-  _upgradeItemsData:
+  UpgradeItemsData:
   - {fileID: 11400000, guid: 5ec685d497809d5428ef213f48d3b845, type: 2}
   - {fileID: 11400000, guid: b1756bdce4681f7448ea107d27622587, type: 2}
   - {fileID: 11400000, guid: bd61596c695c6de4b89e252a1068e8a2, type: 2}
   - {fileID: 11400000, guid: 5d667a259eb04ee4db2642ea34d8fbf9, type: 2}
+  - {fileID: 11400000, guid: 9130093a67046324ebdc62c17bd141e8, type: 2}
+  UpgradeGroup: 2

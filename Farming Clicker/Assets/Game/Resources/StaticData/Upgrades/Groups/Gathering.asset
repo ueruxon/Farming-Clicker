@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 979e2f3827844637969cf45ef6726bad, type: 3}
   m_Name: Gathering
   m_EditorClassIdentifier: 
-  _upgradeItemsData:
+  UpgradeItemsData:
   - {fileID: 11400000, guid: 5ae004dcf7cb2904bb51f701645b3ca6, type: 2}
   - {fileID: 11400000, guid: 4f250dc18e0ae1041924095acddd657d, type: 2}
+  UpgradeGroup: 0

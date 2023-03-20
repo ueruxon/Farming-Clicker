@@ -2,6 +2,7 @@
 using System.Linq;
 using Game.Scripts.Data.StaticData;
 using Game.Scripts.Data.StaticData.Product;
+using Game.Scripts.Data.StaticData.Upgrades;
 using Game.Scripts.Infrastructure.Services.AssetManagement;
 using Game.Scripts.Logic.Production;
 
@@ -12,8 +13,13 @@ namespace Game.Scripts.Infrastructure.Services.StaticData
         private readonly IAssetProvider _assetProvider;
 
         private ProductionArea _productionAreaPrefab;
-        private Dictionary<string, ProductType> _productTypeByName;
+        
+        private Dictionary<string, ProductItemData> _productDataByName;
         private Dictionary<ProductType, ProductItemData> _productDataByType;
+
+        private Dictionary<string, UpgradeItemData> _upgradeDataByName;
+        private Dictionary<UpgradeType, UpgradeItemData> _upgradeDataByType;
+        private Dictionary<UpgradeGroup, List<UpgradeItemData>> _upgradeGroupsByType;
 
         private Dictionary<ShopDataType, List<ShopItemData>> _shopDataByType;
 
@@ -26,9 +32,16 @@ namespace Game.Scripts.Infrastructure.Services.StaticData
         private void LoadData()
         {
             ProductItemData[] productsItemData = _assetProvider.LoadAll<ProductItemData>(AssetPath.ProductsDataPath);
+            UpgradeItemData[] upgradesItemData = _assetProvider.LoadAll<UpgradeItemData>(AssetPath.UpgradesDataPath);
 
-            _productTypeByName = productsItemData.ToDictionary(x => x.Name, x => x.ProductType);
+            _productDataByName = productsItemData.ToDictionary(x => x.Name, x => x);
             _productDataByType = productsItemData.ToDictionary(x => x.ProductType, x => x);
+
+            _upgradeGroupsByType = _assetProvider.LoadAll<UpgradeItemGroupData>(AssetPath.UpgradesGroupsDataPath)
+                .ToDictionary(x => x.UpgradeGroup, x => x.UpgradeItemsData);
+            _upgradeDataByType = upgradesItemData
+                .ToDictionary(x => x.UpgradeType, x => x);
+            _upgradeDataByName = upgradesItemData.ToDictionary(x => x.Name, x => x);
             
             _shopDataByType = new()
             {
@@ -39,11 +52,11 @@ namespace Game.Scripts.Infrastructure.Services.StaticData
             };
         }
 
-        public ProductType GetProductType(string productName)
+        public ProductItemData GetDataForProduct(string productName)
         {
-            return _productTypeByName.TryGetValue(productName, out ProductType type)
-                ? type
-                : ProductType.None;
+            return _productDataByName.TryGetValue(productName, out ProductItemData data)
+                ? data
+                : null;
         }
 
         public ProductItemData GetDataForProduct(ProductType type) =>
@@ -53,6 +66,19 @@ namespace Game.Scripts.Infrastructure.Services.StaticData
         
         public List<ShopItemData> GetDataForShop(ShopDataType type) => 
             _shopDataByType.TryGetValue(type, out List<ShopItemData> data)
+            ? data
+            : null;
+
+        public Dictionary<UpgradeGroup, List<UpgradeItemData>> GetUpgradesByGroup() => 
+            _upgradeGroupsByType;
+
+        public UpgradeItemData GetDataForUpgrade(UpgradeType type) =>
+            _upgradeDataByType.TryGetValue(type, out UpgradeItemData data)
+                ? data
+                : null;
+        
+        public UpgradeItemData GetDataForUpgrade(string upgradeName) => 
+            _upgradeDataByName.TryGetValue(upgradeName, out UpgradeItemData data)
             ? data
             : null;
     }

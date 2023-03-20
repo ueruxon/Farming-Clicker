@@ -1,18 +1,18 @@
 ﻿using System;
-using Game.Scripts.Data;
 using Game.Scripts.Data.Game;
 using Game.Scripts.Data.StaticData;
+using Game.Scripts.Data.StaticData.Upgrades;
 using Game.Scripts.Infrastructure.Services.Progress;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Game.Scripts.UI.Windows.Shop
+namespace Game.Scripts.UI.Windows.Shop.Elements
 {
     public class ShopItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        public event Action<FarmData> Clicked;
+        public event Action<ShopItemData> Clicked;
         public event Action<ShopItemData, bool> Hovered; 
 
         [SerializeField] private Button _button;
@@ -23,18 +23,21 @@ namespace Game.Scripts.UI.Windows.Shop
         [SerializeField] private PriceConfig _seedConfig;
         [Space(2)]
         [SerializeField] private PriceConfig _coinConfig;
-
-        private ShopItemData _shopItemData;
-        private FarmData _farmData;
+        
         private ResourceRepository _resourceRepository;
+        private UpgradeRepository _upgradeRepository;
+        private ShopItemData _shopItemData;
+        
 
-        public void Init(ShopItemData shopItemData, FarmData farmData, IGameProgressService progressService)
+        public void Init(IGameProgressService progressService, ShopItemData shopItemData)
         {
             _shopItemData = shopItemData;
-            _farmData = farmData;
+
             _resourceRepository = progressService.Progress.ResourceRepository;
             _resourceRepository.ResourceAmountChanged += ResourceAmountChanged;
-            
+            _upgradeRepository = progressService.Progress.UpgradeRepository;
+            _upgradeRepository.UpgradeInGroupChanged += OnUpgradeInGroupChanged;
+            _upgradeRepository.LastUpgradeInGroupPurchased += OnLastUpgradeInGroupPurchased;
             _button.onClick.AddListener(OnClicked);
 
             CreateItemView();
@@ -43,6 +46,34 @@ namespace Game.Scripts.UI.Windows.Shop
 
         private void ResourceAmountChanged(ResourceType type) => 
             UpdateView();
+
+        private void OnUpgradeInGroupChanged(UpgradeItemData prevUpgradeData, UpgradeItemData nextUpgradeData)
+        {
+            if (_shopItemData.DataType == ShopDataType.Upgrade)
+            {
+                if (prevUpgradeData.Name == _shopItemData.Name)
+                {
+                    _shopItemData = nextUpgradeData;
+
+                    CreateItemView();
+                    UpdateView();
+                    
+                    Hovered?.Invoke(_shopItemData, true);
+                }
+            }
+        }
+
+        private void OnLastUpgradeInGroupPurchased(UpgradeItemData lastUpgradeData)
+        {
+            if (_shopItemData.DataType == ShopDataType.Upgrade)
+            {
+                if (lastUpgradeData.Name == _shopItemData.Name)
+                {
+                    Hovered?.Invoke(_shopItemData, false);
+                    gameObject.SetActive(false);
+                }
+            }
+        }
 
         private void CreateItemView()
         {
@@ -88,7 +119,7 @@ namespace Game.Scripts.UI.Windows.Shop
                 _resourceRepository.SpendResource(ResourceType.Seed, _shopItemData.Price.SeedPrice);
                 _resourceRepository.SpendResource(ResourceType.Coin, _shopItemData.Price.CoinPrice);
                 
-                Clicked?.Invoke(_farmData);
+                Clicked?.Invoke(_shopItemData);
             }
         }
 
@@ -98,8 +129,13 @@ namespace Game.Scripts.UI.Windows.Shop
         public void OnPointerExit(PointerEventData eventData) => 
             Hovered?.Invoke(_shopItemData, false);
 
-        private void OnDestroy() => 
+        private void OnDestroy()
+        {
             _button.onClick.RemoveListener(OnClicked);
+            _resourceRepository.ResourceAmountChanged -= ResourceAmountChanged;
+            _upgradeRepository.UpgradeInGroupChanged -= OnUpgradeInGroupChanged;
+            _upgradeRepository.LastUpgradeInGroupPurchased -= OnLastUpgradeInGroupPurchased;
+        }
     }
     
     [Serializable]
@@ -110,5 +146,10 @@ namespace Game.Scripts.UI.Windows.Shop
         public TMP_Text Counter;
         public Color DefaultColor;
         public Color DangerColor;
+    }
+
+    public class ShopItemSelectData
+    {
+        public ShopDataType ShopDataType;
     }
 }
