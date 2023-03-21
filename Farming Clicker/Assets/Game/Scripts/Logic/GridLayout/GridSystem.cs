@@ -55,6 +55,8 @@ namespace Game.Scripts.Logic.GridLayout
             return _gridArray;
         }
 
+        public GridCell[,] GetGrid() => _gridArray;
+
         public GridCell GetGridCell(Vector2Int cellPosition) => 
             _gridArray[cellPosition.x, cellPosition.y];
 
@@ -91,19 +93,27 @@ namespace Game.Scripts.Logic.GridLayout
 
         public void OpenGridCells(int upgradesCount)
         {
-            int openColumnCount = upgradesCount * _height;
-            int openCount = _openCellCountByDefault;
-            
-            Debug.Log($"openColumnCount: {openColumnCount}, openCount: {openCount}");
+            int openColumnCount = (upgradesCount * _height) + _openCellCountByDefault;
+            int openCellCount = 0;
 
             foreach (GridCell cell in _gridArray)
             {
-                if (openCount < openColumnCount)
+                if (cell.IsOpen())
+                    openCellCount++;
+            }
+            
+            int needOpenCount = openColumnCount - openCellCount;
+
+            foreach (GridCell cell in _gridArray)
+            {
+                if (needOpenCount > 0 && cell.IsOpen() == false)
                 {
+                    needOpenCount--;
                     cell.Open();
-                    Debug.Log("tuta");
-                    openCount++;
                 }
+                
+                if (needOpenCount == 0)
+                    break;
             }
         }
     }

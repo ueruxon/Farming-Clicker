@@ -7,7 +7,6 @@ using Game.Scripts.Data.StaticData.Upgrades;
 using Game.Scripts.Infrastructure.Services.Factory;
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
-using Game.Scripts.Logic.Cameras;
 using Game.Scripts.Logic.GridLayout;
 using Game.Scripts.Logic.Production;
 using Game.Scripts.Logic.Upgrades;
@@ -26,8 +25,9 @@ namespace Game.Scripts.Logic
         public event Action ProductionAreaChoices;
         public event Action ProductionAreaCanceled;
         public event Action ProductionAreaBuilt;
-        public event Action<ProductionArea> ProductAreaSelected;
-        public event Action ProductAreaDeselected;
+        public event Action<ProductionState> ProductionAreaStateChanged;
+        public event Action<GridCell> GridCellSelected;
+        public event Action GridCellDeselected;
 
         private readonly GameFactory _gameFactory;
         private readonly IGameProgressService _progressService;
@@ -41,6 +41,8 @@ namespace Game.Scripts.Logic
         private FarmState _farmState;
         private GridCell _selectedCell;
 
+        private List<ProductionArea> _productionAreas;
+
         public FarmController(IGameProgressService progressService, 
             IStaticDataService staticDataService, 
             GameFactory gameFactory, 
@@ -51,6 +53,8 @@ namespace Game.Scripts.Logic
             _gameFactory = gameFactory;
             _gridSystem = gridSystem;
             _mainCamera = Camera.main;
+
+            _productionAreas = new List<ProductionArea>();
         }
 
         public void Init() => 
@@ -68,6 +72,9 @@ namespace Game.Scripts.Logic
 
             SetState(FarmState.Select);
         }
+
+        public List<ProductionArea> GetAllProductionsArea() => 
+            _productionAreas;
 
         public void BuildProductionArea(ProductType productType)
         {
@@ -91,9 +98,39 @@ namespace Game.Scripts.Logic
             _selectedCell.Select(false);
             _selectedCell = null;
             
-            ProductAreaDeselected?.Invoke();
+            GridCellDeselected?.Invoke();
         }
 
+        public void RemoveSelectedProductionArea()
+        {
+            if (_selectedCell != null)
+            {
+                ProductionArea area = _selectedCell.GetProductionArea();
+                _productionAreas.Remove(area);
+                _selectedCell.ClearProductionArea();
+                
+                area.StateChanged -= OnProductionAreaStateChanged;
+            }
+        }
+
+        public void WaterAllCrops()
+        {
+            foreach (ProductionArea area in _productionAreas)
+            {
+                if (area.GetProductionState() == ProductionState.Idle)
+                    area.ActivateProduction();
+            }
+        }
+
+        public void HarvestAllCrops()
+        {
+            foreach (ProductionArea area in _productionAreas)
+            {
+                if (area.GetProductionState() == ProductionState.Complete)
+                    area.HarvestProduction();
+            }
+        }
+        
         private void OnSomeUpgradePurchased()
         {
             List<Upgrade> upgrades = 
@@ -135,13 +172,18 @@ namespace Game.Scripts.Logic
             GridCell gridCell = _gridSystem.GetGridCell(cellPosition);
             Vector3 spawnPosition = _gridSystem.GetWorldPosition(cellPosition);
             ProductionArea productionArea = _gameFactory.CreateProductionArea(productType, at: spawnPosition);
+            productionArea.StateChanged += OnProductionAreaStateChanged;
+            
             gridCell.AddProductionArea(productionArea);
+            _productionAreas.Add(productionArea);
+
+            OnProductionAreaStateChanged(productionArea.GetProductionState());
         }
 
         private void OnCellEnter(Vector2Int cellPosition)
         {
             GridCell cell = _gridSystem.GetGridCell(cellPosition);
-            
+
             if (_areaGhost is not null) 
                 _areaGhost.Hook(cell.transform);
         }
@@ -176,16 +218,24 @@ namespace Game.Scripts.Logic
                 
                 _selectedCell = _gridSystem.GetGridCell(cellPosition);
                 _selectedCell.Select(true);
-                ProductionArea productionArea = _selectedCell.GetProductionArea();
 
-                ProductAreaSelected?.Invoke(productionArea);
+                GridCellSelected?.Invoke(_selectedCell);
             }
         }
+
+        private void OnProductionAreaStateChanged(ProductionState state) => 
+            ProductionAreaStateChanged?.Invoke(state);
 
         private void SetState(FarmState newState) => 
             _farmState = newState;
         
-        public void Cleanup() =>
+        public void Cleanup()
+        {
             _progressService.Progress.UpgradeRepository.UpgradePurchased -= OnSomeUpgradePurchased;
+
+            if (_productionAreas.Count > 0)
+                foreach (ProductionArea productionArea in _productionAreas)
+                    productionArea.StateChanged -= OnProductionAreaStateChanged;
+        }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using Game.Scripts.Logic;
-using Game.Scripts.Logic.Production;
+using Game.Scripts.Logic.GridLayout;
 using Game.Scripts.UI.Windows.Shop;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Scripts.UI.Elements
+namespace Game.Scripts.UI.Windows.HUD.Elements
 {
     public class OpenShopButton : MonoBehaviour
     {
@@ -22,8 +22,8 @@ namespace Game.Scripts.UI.Elements
             _farmController.ProductionAreaChoices += Hide;
             _farmController.ProductionAreaCanceled += Show;
             _farmController.ProductionAreaBuilt += Show;
-            _farmController.ProductAreaSelected += OnProductAreaSelected;
-            _farmController.ProductAreaDeselected += Show;
+            _farmController.GridCellSelected += OnGridCellSelected;
+            _farmController.GridCellDeselected += Show;
             
             _openButton.onClick.AddListener(OpenShop);
         }
@@ -37,7 +37,7 @@ namespace Game.Scripts.UI.Elements
         private void Show() => 
             gameObject.SetActive(true);
 
-        private void OnProductAreaSelected(ProductionArea productionArea) => 
+        private void OnGridCellSelected(GridCell cell) => 
             Hide();
 
         private void OnDestroy()
@@ -45,8 +45,8 @@ namespace Game.Scripts.UI.Elements
             _farmController.ProductionAreaChoices -= Hide;
             _farmController.ProductionAreaCanceled -= Show;
             _farmController.ProductionAreaBuilt -= Show;
-            _farmController.ProductAreaDeselected -= Show;
-            _farmController.ProductAreaSelected -= OnProductAreaSelected;
+            _farmController.GridCellDeselected -= Show;
+            _farmController.GridCellSelected -= OnGridCellSelected;
             _openButton.onClick.RemoveListener(OpenShop);
         }
     }

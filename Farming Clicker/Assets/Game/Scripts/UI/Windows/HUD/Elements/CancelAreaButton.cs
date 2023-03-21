@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Scripts.UI.Elements
+namespace Game.Scripts.UI.Windows.HUD.Elements
 {
     public class CancelAreaButton : MonoBehaviour
     {

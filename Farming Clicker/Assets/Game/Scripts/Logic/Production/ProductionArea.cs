@@ -13,7 +13,8 @@ namespace Game.Scripts.Logic.Production
     {
         Idle,
         Grow,
-        Complete
+        Complete,
+        Destroyed
     }
     
     public class ProductionArea : MonoBehaviour
@@ -32,7 +33,6 @@ namespace Game.Scripts.Logic.Production
         private ProductType _productType;
         private ProductionState _currentState;
         
-
         public void Init(IGameProgressService progressService, ProductItemData productItemData, float areaSize)
         {
             _resourceRepository = progressService.Progress.ResourceRepository;
@@ -61,7 +61,7 @@ namespace Game.Scripts.Logic.Production
             StartCoroutine(GrowProductRoutine());
         }
 
-        public void ResetProduction()
+        public void HarvestProduction()
         {
             SetState(ProductionState.Idle);
             UpdateProductionVisual(0, _productItemData.GrowTime);
@@ -113,6 +113,12 @@ namespace Game.Scripts.Logic.Production
                     DropAmount = _productItemData.DropData.CoinDropAmount
                 };
             }
+        }
+
+        public void DestroyArea()
+        {
+            SetState(ProductionState.Destroyed);
+            Destroy(gameObject);
         }
 
         private void SetState(ProductionState newState)

@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using Game.Scripts.Data;
-using Game.Scripts.Data.StaticData;
 using Game.Scripts.Data.StaticData.Upgrades;
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
-using UnityEngine;
 
 namespace Game.Scripts.Logic.Upgrades
 {
@@ -13,8 +10,8 @@ namespace Game.Scripts.Logic.Upgrades
         private readonly IStaticDataService _staticDataService;
         private readonly IGameProgressService _progressService;
 
-        private Dictionary<UpgradeGroup, Queue<UpgradeItemData>> _allAvailableUpgradesQueue;
-        private List<UpgradeItemData> _currentAvailableUpgrades;
+        private readonly Dictionary<UpgradeGroup, Queue<UpgradeItemData>> _allAvailableUpgradesQueue;
+        private readonly List<UpgradeItemData> _currentAvailableUpgrades;
 
         public UpgradesHandler(IStaticDataService staticDataService, IGameProgressService progressService)
         {

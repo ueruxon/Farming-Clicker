@@ -8,7 +8,7 @@ using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
 using Game.Scripts.Logic.Production;
 using Game.Scripts.Logic.Upgrades;
-using Game.Scripts.UI.Elements;
+using Game.Scripts.UI.Windows.HUD.Elements;
 using Game.Scripts.UI.Windows.SelectArea;
 using Game.Scripts.UI.Windows.Shop;
 using Game.Scripts.UI.Windows.Shop.Elements;
@@ -56,6 +56,9 @@ namespace Game.Scripts.UI.Services.Factory
 
             ResourceCounter counter = hud.GetComponentInChildren<ResourceCounter>();
             counter.Init(_gameProgressService);
+
+            InteractionCropsButton interactionButton = hud.GetComponentInChildren<InteractionCropsButton>();
+            interactionButton.Init(_gameProgressService, _farmController);
         }
 
         public void CreateShop()
@@ -79,7 +82,7 @@ namespace Game.Scripts.UI.Services.Factory
         {
             SelectAreaWindow areaWindow =
                 _assetProvider.Instantiate<SelectAreaWindow>(AssetPath.UISelectAreaPath, _uiRoot);
-            areaWindow.Init(_farmController);
+            areaWindow.Init(_gameProgressService, _farmController);
             areaWindow.Hide();
         }
     }

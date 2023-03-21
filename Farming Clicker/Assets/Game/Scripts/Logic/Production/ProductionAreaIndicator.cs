@@ -31,9 +31,9 @@ namespace Game.Scripts.Logic.Production
             
             _waterButton.onClick.AddListener(_productionArea.ActivateProduction);
             _waterButton.interactable = false;
-            _coinButton.onClick.AddListener(_productionArea.ResetProduction);
+            _coinButton.onClick.AddListener(_productionArea.HarvestProduction);
             _coinButton.interactable = false;
-            _seedButton.onClick.AddListener(_productionArea.ResetProduction);
+            _seedButton.onClick.AddListener(_productionArea.HarvestProduction);
             _seedButton.interactable = false;
 
             OnUpgradePurchased();
@@ -56,13 +56,7 @@ namespace Game.Scripts.Logic.Production
                 }
             }
         }
-
-        public void Show() => 
-            _canvasGroup.SetActive(true);
-
-        public void Hide() => 
-            _canvasGroup.SetActive(false);
-
+        
         private void OnProductionStateChanged(ProductionState state)
         {
             HideAllButtons();
@@ -102,9 +96,12 @@ namespace Game.Scripts.Logic.Production
 
         private void OnDestroy()
         {
+            _productionArea.StateChanged -= OnProductionStateChanged;
+            _upgradeRepository.UpgradePurchased -= OnUpgradePurchased;
+            
             _waterButton.onClick.RemoveListener(_productionArea.ActivateProduction);
-            _coinButton.onClick.RemoveListener(_productionArea.ResetProduction);
-            _seedButton.onClick.RemoveListener(_productionArea.ResetProduction);
+            _coinButton.onClick.RemoveListener(_productionArea.HarvestProduction);
+            _seedButton.onClick.RemoveListener(_productionArea.HarvestProduction);
         }
     }
 }

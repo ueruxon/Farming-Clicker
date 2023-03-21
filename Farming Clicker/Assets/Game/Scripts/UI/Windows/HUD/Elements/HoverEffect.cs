@@ -1,9 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Game.Scripts.UI.Elements
+namespace Game.Scripts.UI.Windows.HUD.Elements
 {
     public class HoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {

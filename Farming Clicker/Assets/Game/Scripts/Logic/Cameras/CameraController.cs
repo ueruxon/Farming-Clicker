@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Game.Scripts.Common;
+using Game.Scripts.Logic.GridLayout;
 using Game.Scripts.Logic.Production;
 using UnityEngine;
 
@@ -18,15 +19,17 @@ namespace Game.Scripts.Logic.Cameras
         {
             _coroutineRunner = coroutineRunner;
             _farmController = farmController;
-            _farmController.ProductAreaSelected += OnProductionAreaSelected;
-            _farmController.ProductAreaDeselected += OnProductionAreaDeselected;
+            _farmController.GridCellSelected += OnProductionAreaSelected;
+            _farmController.GridCellDeselected += OnProductionAreaDeselected;
             
             _camera = Camera.main;
             _defaultPosition = _camera.transform.position;
         }
 
-        private void OnProductionAreaSelected(ProductionArea area)
+        private void OnProductionAreaSelected(GridCell cell)
         {
+            var area = cell.GetProductionArea();
+            
             float xPosition = Mathf.Clamp(
                 (area.transform.position.x / 2f) + _defaultPosition.x, 
                 _defaultPosition.x, 
@@ -67,8 +70,8 @@ namespace Game.Scripts.Logic.Cameras
 
         public void Cleanup()
         {
-            _farmController.ProductAreaSelected -= OnProductionAreaSelected;
-            _farmController.ProductAreaDeselected -= OnProductionAreaDeselected;
+            _farmController.GridCellSelected -= OnProductionAreaSelected;
+            _farmController.GridCellDeselected -= OnProductionAreaDeselected;
         }
     }
 }

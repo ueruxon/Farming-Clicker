@@ -48,9 +48,7 @@ namespace Game.Scripts.Logic.GridLayout
             _selectProps.OutlineVisual.transform.localScale = Vector3.one * cellSize;
             _selectProps.SpriteRenderer.color = _selectProps.DefaultColor;
             _selectProps.OutlineVisual.SetActive(false);
-            //_outlineVisual.transform.localScale = Vector3.one * cellSize;
-            //_outlineVisual.SetActive(false);
-            
+
             if (_debugMode)
                 DebugText();
 
@@ -60,7 +58,6 @@ namespace Game.Scripts.Logic.GridLayout
         public void SetSelectMode(SelectMode selectMode)
         {
             _selectMode = selectMode;
-            //_outlineVisual.SetActive(selectMode == SelectMode.Global && IsAvailable());
             _selectProps.OutlineVisual.SetActive(selectMode == SelectMode.Global && IsAvailable());
         }
 
@@ -73,19 +70,23 @@ namespace Game.Scripts.Logic.GridLayout
         public bool IsAvailable() => 
             _cellState == CellState.Open;
 
+        public bool IsOpen() => 
+            _cellState != CellState.Close;
+
+        public bool IsOccupied() => 
+            _cellState == CellState.Occupied;
+
         public void Select(bool select)
         {
             if (select)
             {
                 _cellState = CellState.Selected;
-                //_outlineVisual.SetActive(true);
                 _selectProps.SpriteRenderer.color = _selectProps.SelectedColor;
                 _selectProps.OutlineVisual.SetActive(true);
             }
             else
             {
-                _cellState = CellState.Occupied;
-                //_outlineVisual.SetActive(false);
+                _cellState = _productionArea is not null ? CellState.Occupied : CellState.Open;
                 _selectProps.SpriteRenderer.color = _selectProps.DefaultColor;
                 _selectProps.OutlineVisual.SetActive(false);
             }
@@ -99,6 +100,7 @@ namespace Game.Scripts.Logic.GridLayout
 
         public void ClearProductionArea()
         {
+            _productionArea.DestroyArea();
             _productionArea = null;
             _cellState = CellState.Open;
         }
@@ -111,7 +113,6 @@ namespace Game.Scripts.Logic.GridLayout
             if (_cellState == CellState.Occupied
                 && _selectMode == SelectMode.Local)
             {
-                //_outlineVisual.SetActive(true);
                 _selectProps.OutlineVisual.SetActive(true);
             }
 
@@ -124,7 +125,6 @@ namespace Game.Scripts.Logic.GridLayout
             if (_cellState == CellState.Occupied
                 && _selectMode == SelectMode.Local)
             {
-                //_outlineVisual.SetActive(false);
                 _selectProps.OutlineVisual.SetActive(false);
             }
             

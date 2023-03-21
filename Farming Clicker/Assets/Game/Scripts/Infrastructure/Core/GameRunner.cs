@@ -1,5 +1,4 @@
 using Game.Scripts.Common;
-using Game.Scripts.Data;
 using Game.Scripts.Data.Game;
 using UnityEngine;
 
@@ -16,5 +15,8 @@ namespace Game.Scripts.Infrastructure.Core
         {
             _gameInstaller = new GameInstaller(_gameConfig, _gridContainer, this);
         }
+
+        private void OnDestroy() => 
+            _gameInstaller.Cleanup();
     }
 }

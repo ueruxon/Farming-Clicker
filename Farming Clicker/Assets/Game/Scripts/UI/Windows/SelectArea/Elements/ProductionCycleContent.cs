@@ -84,10 +84,10 @@ namespace Game.Scripts.UI.Windows.SelectArea.Elements
             _productionArea.ActivateProduction();
 
         private void OnCoinClick() => 
-            _productionArea.ResetProduction();
+            _productionArea.HarvestProduction();
 
         private void OnSeedClick() => 
-            _productionArea.ResetProduction();
+            _productionArea.HarvestProduction();
 
         private void HideAllButtons()
         {
@@ -99,6 +99,9 @@ namespace Game.Scripts.UI.Windows.SelectArea.Elements
 
         private void OnDestroy()
         {
+            if (_productionArea is not null)
+                _productionArea.StateChanged -= OnProductionStateChanged;
+            
             _waterButton.onClick.RemoveListener(OnWaterClick);
             _harvestCoinButton.onClick.RemoveListener(OnCoinClick);
             _harvestSeedButton.onClick.RemoveListener(OnSeedClick);

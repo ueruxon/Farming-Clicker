@@ -4,7 +4,7 @@ using Game.Scripts.Infrastructure.Services.Progress;
 using TMPro;
 using UnityEngine;
 
-namespace Game.Scripts.UI.Elements
+namespace Game.Scripts.UI.Windows.HUD.Elements
 {
     public class ResourceCounter : MonoBehaviour
     {
