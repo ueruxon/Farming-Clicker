@@ -87,6 +87,7 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
         {
             if (state is ProductionState.Complete or ProductionState.Idle or ProductionState.Destroyed)
             {
+                
                 if (HasAnyAreaInState(ProductionState.Complete))
                 {
                     if (_canHarvesting)
@@ -95,7 +96,7 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
                         return;
                     }
                 }
-                
+
                 if (HasAnyAreaInState(ProductionState.Idle))
                 {
                     if (_canWatering)
@@ -123,10 +124,12 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
             if (_canHarvesting && _interactionState == InteractionState.Harvesting)
             {
                 _farmController.HarvestAllCrops();
-                SetButtonState(HasAnyAreaInState(ProductionState.Idle) 
-                    ? InteractionState.Watering 
-                    : InteractionState.None);
-                
+
+                if (_canWatering && HasAnyAreaInState(ProductionState.Idle)) 
+                    SetButtonState(InteractionState.Watering);
+                else
+                    SetButtonState(InteractionState.None);
+
                 return;
             }
             

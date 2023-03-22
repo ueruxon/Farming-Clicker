@@ -106,10 +106,10 @@ Material:
     - _Cutoff: 0.5
     - _Depth: 2.45
     - _DepthExp: 1
-    - _DepthHorizontal: 1.15
+    - _DepthHorizontal: 1
     - _DepthMode: 0
     - _DepthTexture: 1
-    - _DepthVertical: 3
+    - _DepthVertical: 2
     - _DisableDepthTexture: 0
     - _DistanceNormalsOn: 0
     - _DistanceNormalsTiling: 0.25
@@ -207,7 +207,7 @@ Material:
     - _WorldSpaceUV: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0, g: 0.3510604, b: 1, a: 1}
+    - _BaseColor: {r: 0, g: 0.43053007, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DepthMapBounds: {r: 0, g: 0, b: 0, a: 0}
     - _Direction: {r: 1, g: 1, b: 0, a: 0}

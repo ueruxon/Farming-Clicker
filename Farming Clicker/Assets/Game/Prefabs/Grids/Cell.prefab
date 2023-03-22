@@ -64,8 +64,8 @@ MonoBehaviour:
   _selectProps:
     OutlineVisual: {fileID: 1834546538307165470}
     SpriteRenderer: {fileID: 1834546538524163249}
-    DefaultColor: {r: 1, g: 1, b: 1, a: 0.49019608}
-    SelectedColor: {r: 0, g: 1, b: 0.019607844, a: 0.5882353}
+    DefaultColor: {r: 1, g: 1, b: 1, a: 0.5882353}
+    SelectedColor: {r: 1, g: 0.9607843, b: 0, a: 0.6666667}
   _collider: {fileID: 6413467859600127797}
   _debugMode: 0
   _debugTransform: {fileID: 1834546538016040722}
