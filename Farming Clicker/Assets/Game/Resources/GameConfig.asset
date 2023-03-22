@@ -15,9 +15,9 @@ MonoBehaviour:
   _openCellByDefault: 3
   _initialResources:
   - ResourceType: 0
-    Amount: 1000
+    Amount: 1
   - ResourceType: 1
-    Amount: 5000
+    Amount: 0
   CellPrefab: {fileID: 1834546537989561478, guid: ddd24453bb73452419ead0a64587375f,
     type: 3}
   Width: 6

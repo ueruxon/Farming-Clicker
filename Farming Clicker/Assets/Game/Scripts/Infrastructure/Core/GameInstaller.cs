@@ -7,6 +7,7 @@ using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
 using Game.Scripts.Logic.Cameras;
 using Game.Scripts.Logic.GridLayout;
+using Game.Scripts.Logic.Tutorials;
 using Game.Scripts.Logic.Upgrades;
 using Game.Scripts.UI.Services.Factory;
 using UnityEngine;
@@ -29,6 +30,8 @@ namespace Game.Scripts.Infrastructure.Core
         private FarmController _farmController;
         private CameraController _cameraController;
         private UpgradesHandler _upgradesHandler;
+
+        private TutorialController _tutorialController;
         
         private GameInitializer _gameInitializer;
         
@@ -53,21 +56,25 @@ namespace Game.Scripts.Infrastructure.Core
             _farmController = new FarmController(_progressService, _staticDataService, _gameFactory, _gridSystem);
             _cameraController = new CameraController(_coroutineRunner, _farmController);
             _upgradesHandler = new UpgradesHandler(_staticDataService, _progressService);
+            _tutorialController = new TutorialController(_progressService, _assetProvider, _farmController);
 
-            _uiFactory = new UIFactory(_assetProvider, _staticDataService, _progressService, _farmController, _upgradesHandler);
+            _uiFactory = new UIFactory(_assetProvider, _staticDataService, _progressService, _farmController, _upgradesHandler, _tutorialController);
 
             _gameInitializer = new GameInitializer(_gameConfig, 
                 _staticDataService,
                 _progressService,
                 _uiFactory,
                 _farmController,
-                _upgradesHandler);
+                _upgradesHandler,
+                _tutorialController);
         }
 
         public void Cleanup()
         {
             _farmController.Cleanup();
             _cameraController.Cleanup();
+            _uiFactory.Cleanup();
+            _tutorialController.Cleanup();
         }
     }
 }

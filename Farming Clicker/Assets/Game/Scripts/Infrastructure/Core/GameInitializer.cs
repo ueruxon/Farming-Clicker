@@ -2,6 +2,7 @@
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
+using Game.Scripts.Logic.Tutorials;
 using Game.Scripts.Logic.Upgrades;
 using Game.Scripts.UI.Services.Factory;
 
@@ -15,13 +16,15 @@ namespace Game.Scripts.Infrastructure.Core
         private readonly UIFactory _uiFactory;
         private readonly FarmController _farmController;
         private readonly UpgradesHandler _upgradesHandler;
+        private readonly TutorialController _tutorialController;
 
         public GameInitializer(GameConfig gameConfig,
             IStaticDataService staticDataService,
             IGameProgressService gameProgressService,
             UIFactory uiFactory,
-            FarmController farmController, 
-            UpgradesHandler upgradesHandler)
+            FarmController farmController,
+            UpgradesHandler upgradesHandler, 
+            TutorialController tutorialController)
         {
             _gameConfig = gameConfig;
             _staticDataService = staticDataService;
@@ -29,14 +32,17 @@ namespace Game.Scripts.Infrastructure.Core
             _uiFactory = uiFactory;
             _farmController = farmController;
             _upgradesHandler = upgradesHandler;
+            _tutorialController = tutorialController;
 
             LoadProgressOrInitNew();
             InitializeSystems();
             InitUI();
             InitGameWorld();
+            InitTutorial();
         }
-        
+
         // async
+
         private void LoadProgressOrInitNew() => 
             _gameProgressService.Progress = NewProgress();
 
@@ -63,9 +69,13 @@ namespace Game.Scripts.Infrastructure.Core
             _uiFactory.CreateHUD();
             _uiFactory.CreateShop();
             _uiFactory.CreateSelectProductArea();
+            _uiFactory.CreateTutorialWindow();
         }
 
         private void InitGameWorld() => 
             _farmController.CreateFarm();
+
+        private void InitTutorial() => 
+            _tutorialController.Init(_uiFactory);
     }
 }

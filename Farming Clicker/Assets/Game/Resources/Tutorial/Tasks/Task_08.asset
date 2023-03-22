@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e8da5f60c542b0850db9960b51b5f3, type: 3}
+  m_Name: Task_08
+  m_EditorClassIdentifier: 
+  TaskData:
+    Description: Continue growing your farm. Save up 5 coins to buy upgrade
+    TaskNumber: 8
+    IsLastTask: 0

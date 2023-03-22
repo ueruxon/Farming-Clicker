@@ -1,6 +1,7 @@
 ﻿using System;
 using Game.Scripts.Logic;
 using Game.Scripts.Logic.GridLayout;
+using Game.Scripts.Logic.Production;
 using Game.Scripts.UI.Windows.Shop;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
 {
     public class OpenShopButton : MonoBehaviour
     {
+        public event Action ShopOpened;
+        
         [SerializeField] private Button _openButton;
 
         private ShopWindow _shopWindow;
@@ -19,7 +22,7 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
             _shopWindow = shopWindow;
 
             _farmController = farmController;
-            _farmController.ProductionAreaChoices += Hide;
+            _farmController.ProductionAreaChoices += OnProductionAreaChoices;
             _farmController.ProductionAreaCanceled += Show;
             _farmController.ProductionAreaBuilt += Show;
             _farmController.GridCellSelected += OnGridCellSelected;
@@ -28,8 +31,14 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
             _openButton.onClick.AddListener(OpenShop);
         }
 
-        private void OpenShop() => 
+        private void OpenShop()
+        {
             _shopWindow.Open();
+            ShopOpened?.Invoke();
+        }
+
+        private void OnProductionAreaChoices(ProductType productType) =>
+            Hide();
 
         private void Hide() => 
             gameObject.SetActive(false);
@@ -42,7 +51,7 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
 
         private void OnDestroy()
         {
-            _farmController.ProductionAreaChoices -= Hide;
+            _farmController.ProductionAreaChoices -= OnProductionAreaChoices;
             _farmController.ProductionAreaCanceled -= Show;
             _farmController.ProductionAreaBuilt -= Show;
             _farmController.GridCellDeselected -= Show;

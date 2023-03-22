@@ -1,4 +1,5 @@
 ﻿using Game.Scripts.Logic;
+using Game.Scripts.Logic.Production;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +24,7 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
         public void Hide() => 
             gameObject.SetActive(false);
 
-        private void Show() => 
+        private void Show(ProductType productType) => 
             gameObject.SetActive(true);
 
         private void OnCancelArea() => 

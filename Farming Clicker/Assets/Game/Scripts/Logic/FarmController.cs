@@ -22,7 +22,7 @@ namespace Game.Scripts.Logic
     
     public class FarmController
     {
-        public event Action ProductionAreaChoices;
+        public event Action<ProductType> ProductionAreaChoices;
         public event Action ProductionAreaCanceled;
         public event Action ProductionAreaBuilt;
         public event Action<ProductionState> ProductionAreaStateChanged;
@@ -155,7 +155,7 @@ namespace Game.Scripts.Logic
             _areaGhost = _gameFactory.CreateAreaGhost(worldPoint);
             _gridSystem.SelectAllAvailableCell();
             
-            ProductionAreaChoices?.Invoke();
+            ProductionAreaChoices?.Invoke(_activeProductType);
         }
 
         private void ClearAreaGhost()
@@ -236,6 +236,8 @@ namespace Game.Scripts.Logic
             if (_productionAreas.Count > 0)
                 foreach (ProductionArea productionArea in _productionAreas)
                     productionArea.StateChanged -= OnProductionAreaStateChanged;
+            
+            _productionAreas.Clear();
         }
     }
 }

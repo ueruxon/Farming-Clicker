@@ -14,5 +14,8 @@
         public const string UIShopWindowPath = "UI/Windows/Shop/Shop";
         public const string UIShopItemPath = "UI/Windows/Shop/Elements/ShopItem";
         public const string UISelectAreaPath = "UI/Windows/SelectArea/SelectProductArea";
+
+        public const string UITutorialWindowPath = "Tutorial/Tutorial";
+        public const string TutorialTaskPath = "Tutorial/Tasks";
     }
 }
