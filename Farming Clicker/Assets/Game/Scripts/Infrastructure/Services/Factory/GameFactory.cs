@@ -6,6 +6,7 @@ using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic.Production;
 using UnityEngine;
+using Zenject;
 
 namespace Game.Scripts.Infrastructure.Services.Factory
 {
@@ -15,16 +16,24 @@ namespace Game.Scripts.Infrastructure.Services.Factory
         private readonly IStaticDataService _staticDataService;
         private readonly IGameProgressService _progressService;
         private readonly GameConfig _gameConfig;
-
+        
         public GameFactory(IAssetProvider assetProvider, 
             IStaticDataService staticDataService, 
             IGameProgressService progressService, 
             GameConfig gameConfig)
         {
+            Debug.Log("а я тут");
+            
             _assetProvider = assetProvider;
             _staticDataService = staticDataService;
             _progressService = progressService;
             _gameConfig = gameConfig;
+        }
+
+        [Inject]
+        public void Construct()
+        {
+            Debug.Log("а я тут");
         }
 
         public ProductionArea CreateProductionArea(ProductType productType, Vector3 at)

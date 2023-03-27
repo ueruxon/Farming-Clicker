@@ -11,9 +11,9 @@ namespace Game.Scripts.Logic.Cameras
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly FarmController _farmController;
 
-        private readonly Camera _camera;
-        private readonly Vector3 _defaultPosition;
-        private readonly float _xLimit = 40;
+        private Camera _camera;
+        private Vector3 _defaultPosition;
+        private float _xLimit = 40;
 
         public CameraController(ICoroutineRunner coroutineRunner, FarmController farmController)
         {
@@ -21,7 +21,10 @@ namespace Game.Scripts.Logic.Cameras
             _farmController = farmController;
             _farmController.GridCellSelected += OnProductionAreaSelected;
             _farmController.GridCellDeselected += OnProductionAreaDeselected;
-            
+        }
+
+        public void Init()
+        {
             _camera = Camera.main;
             _defaultPosition = _camera.transform.position;
         }

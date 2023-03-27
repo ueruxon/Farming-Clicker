@@ -46,27 +46,27 @@ namespace Game.Scripts.Infrastructure.Core
 
         private void InstallSystems()
         {
-            _assetProvider = new AssetProvider();
-            _staticDataService = new StaticDataService(_assetProvider);
-            _progressService = new GameProgressService();
-            _gameFactory = new GameFactory(_assetProvider, _staticDataService, _progressService, _gameConfig);
-
-            _gridSystem = new GridSystem(_gameConfig.Width, _gameConfig.Height, 
-                _gameConfig.CellSize, _gameConfig.CellPrefab, _gridContainer, _gameConfig.OpenCellByDefault);
-            _farmController = new FarmController(_progressService, _staticDataService, _gameFactory, _gridSystem);
-            _cameraController = new CameraController(_coroutineRunner, _farmController);
-            _upgradesHandler = new UpgradesHandler(_staticDataService, _progressService);
-            _tutorialController = new TutorialController(_progressService, _assetProvider, _farmController);
-
-            _uiFactory = new UIFactory(_assetProvider, _staticDataService, _progressService, _farmController, _upgradesHandler, _tutorialController);
-
-            _gameInitializer = new GameInitializer(_gameConfig, 
-                _staticDataService,
-                _progressService,
-                _uiFactory,
-                _farmController,
-                _upgradesHandler,
-                _tutorialController);
+            // _assetProvider = new AssetProvider();
+            // _staticDataService = new StaticDataService(_assetProvider);
+            // _progressService = new GameProgressService();
+            // _gameFactory = new GameFactory(_assetProvider, _staticDataService, _progressService, _gameConfig);
+            //
+            // _gridSystem = new GridSystem(_gameConfig.Width, _gameConfig.Height, 
+            //     _gameConfig.CellSize, _gameConfig.CellPrefab, _gridContainer, _gameConfig.OpenCellByDefault);
+            // _farmController = new FarmController(_progressService, _staticDataService, _gameFactory, _gridSystem);
+            // _cameraController = new CameraController(_coroutineRunner, _farmController);
+            // _upgradesHandler = new UpgradesHandler(_staticDataService, _progressService);
+            // _tutorialController = new TutorialController(_progressService, _assetProvider, _farmController);
+            //
+            // _uiFactory = new UIFactory(_assetProvider, _staticDataService, _progressService, _farmController, _upgradesHandler, _tutorialController);
+            //
+            // _gameInitializer = new GameInitializer(_gameConfig, 
+            //     _staticDataService,
+            //     _progressService,
+            //     _uiFactory,
+            //     _farmController,
+            //     _upgradesHandler,
+            //     _tutorialController);
         }
 
         public void Cleanup()

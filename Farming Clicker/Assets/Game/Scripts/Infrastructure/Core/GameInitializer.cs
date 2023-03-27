@@ -42,7 +42,6 @@ namespace Game.Scripts.Infrastructure.Core
         }
 
         // async
-
         private void LoadProgressOrInitNew() => 
             _gameProgressService.Progress = NewProgress();
 

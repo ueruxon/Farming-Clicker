@@ -5,6 +5,7 @@ using Game.Scripts.Data.StaticData.Product;
 using Game.Scripts.Data.StaticData.Upgrades;
 using Game.Scripts.Infrastructure.Services.AssetManagement;
 using Game.Scripts.Logic.Production;
+using UnityEngine;
 
 namespace Game.Scripts.Infrastructure.Services.StaticData
 {
@@ -23,8 +24,11 @@ namespace Game.Scripts.Infrastructure.Services.StaticData
 
         private Dictionary<ShopDataType, List<ShopItemData>> _shopDataByType;
 
-        public StaticDataService(IAssetProvider assetProvider) => 
+        public StaticDataService(IAssetProvider assetProvider)
+        {
+            Debug.Log("servce");
             _assetProvider = assetProvider;
+        }
 
         public void Init() => 
             LoadData();
