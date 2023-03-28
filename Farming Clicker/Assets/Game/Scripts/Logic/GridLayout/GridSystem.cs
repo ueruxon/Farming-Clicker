@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Scripts.Data.Game;
+using UnityEngine;
 
 namespace Game.Scripts.Logic.GridLayout
 {
@@ -7,25 +8,26 @@ namespace Game.Scripts.Logic.GridLayout
         private readonly int _width;
         private readonly int _height;
         private readonly float _cellSize;
-        
-        private readonly GridCell _cellPrefab;
-        private readonly Transform _gridContainer;
         private readonly int _openCellCountByDefault;
 
-        private GridCell[,] _gridArray;
+        private readonly GridCell _cellPrefab;
+        private readonly GridCell[,] _gridArray;
+        
+        private Transform _gridContainer;
 
-        public GridSystem(int width, int height, float cellSize, 
-            GridCell cellPrefab, Transform gridContainer, int openCellCountByDefault = 0)
+        public GridSystem(GameConfig gameConfig)
         {
-            _width = width;
-            _height = height;
-            _cellSize = cellSize;
-            _cellPrefab = cellPrefab;
-            _gridContainer = gridContainer;
-            _openCellCountByDefault = openCellCountByDefault;
+            _width = gameConfig.Width;
+            _height = gameConfig.Height;
+            _cellSize = gameConfig.CellSize;
+            _cellPrefab = gameConfig.CellPrefab;
+            _openCellCountByDefault = gameConfig.OpenCellByDefault;
 
             _gridArray = new GridCell[_width, _height];
         }
+
+        public void Init(Transform gridContainer) => 
+            _gridContainer = gridContainer;
 
         public GridCell[,] CreateGrid()
         {

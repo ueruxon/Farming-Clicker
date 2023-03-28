@@ -117,7 +117,7 @@ namespace Game.Scripts.UI.Windows.Shop.Elements
 
                 ShopItemData shopItemData = _contentShopItems[i];
                 RectTransform content = _shopContents[contentIndex];
-                ShopItem shopItem = _uiFactory.CreateShopItem(shopItemData, content.transform, _dataType);
+                ShopItem shopItem = _uiFactory.CreateShopItem(shopItemData, content.transform);
                 shopItem.Clicked += OnShopItemClicked;
                 shopItem.Hovered += OnShopItemHovered;
 

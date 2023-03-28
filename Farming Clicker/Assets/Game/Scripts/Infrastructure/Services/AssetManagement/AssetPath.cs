@@ -11,6 +11,7 @@
         
         public const string UIRootPath = "UI/UIRoot";
         public const string UIHudPath = "UI/HUD";
+        public const string UILoadingCurtain = "UI/LoadingCurtain";
         public const string UIShopWindowPath = "UI/Windows/Shop/Shop";
         public const string UIShopItemPath = "UI/Windows/Shop/Elements/ShopItem";
         public const string UISelectAreaPath = "UI/Windows/SelectArea/SelectProductArea";

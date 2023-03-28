@@ -2,8 +2,9 @@
 using Game.Scripts.Infrastructure.Services.Factory;
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
-using UnityEngine;
+using Game.Scripts.Infrastructure.Setup.Game;
 using Zenject;
+
 
 namespace Game.Scripts.Infrastructure.Setup.Installers
 {
@@ -11,12 +12,14 @@ namespace Game.Scripts.Infrastructure.Setup.Installers
     {
         public override void InstallBindings()
         {
-            Debug.Log("InstallBindings");
-            Container.Bind<IAssetProvider>().To<AssetProvider>().AsSingle();
-            Container.Bind<IStaticDataService>().To<StaticDataService>().AsSingle();
-            Container.Bind<IGameProgressService>().To<GameProgressService>().AsSingle();
-            Container.Bind<GameFactory>().AsSingle();
-            Debug.Log("InstallBindings 2");
+            Container.Bind<IAssetProvider>().To<AssetProvider>().AsSingle().NonLazy();
+            Container.Bind<IStaticDataService>().To<StaticDataService>().AsSingle().NonLazy();
+            Container.Bind<IGameProgressService>().To<GameProgressService>().AsSingle().NonLazy();
+            Container.Bind<GameFactory>().AsSingle().NonLazy();
+            
+            Container.Bind<GameInitializer>().AsSingle();
+            Container.Bind<SceneInitializer>().AsSingle();
+            Container.Bind<SceneLoader>().AsSingle();
         }
     }
 }

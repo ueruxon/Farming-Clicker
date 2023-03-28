@@ -2,6 +2,7 @@
 using Game.Scripts.Logic.Production;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Game.Scripts.UI.Windows.HUD.Elements
 {
@@ -10,6 +11,7 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
         [SerializeField] private Button _button;
 
         private FarmController _farmController;
+        
         
         public void Init(FarmController farmController)
         {

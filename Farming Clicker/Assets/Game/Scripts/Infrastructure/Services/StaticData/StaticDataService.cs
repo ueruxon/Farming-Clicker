@@ -24,11 +24,8 @@ namespace Game.Scripts.Infrastructure.Services.StaticData
 
         private Dictionary<ShopDataType, List<ShopItemData>> _shopDataByType;
 
-        public StaticDataService(IAssetProvider assetProvider)
-        {
-            Debug.Log("servce");
+        public StaticDataService(IAssetProvider assetProvider) => 
             _assetProvider = assetProvider;
-        }
 
         public void Init() => 
             LoadData();

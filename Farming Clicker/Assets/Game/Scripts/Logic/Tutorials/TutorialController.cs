@@ -17,27 +17,25 @@ namespace Game.Scripts.Logic.Tutorials
         private readonly IGameProgressService _progressService;
         private readonly FarmController _farmController;
         private readonly TutorialTaskProvider _provider;
-
-        private UIFactory _uiFactory;
+        private readonly UIFactory _uiFactory;
 
         private List<TutorialTask> _allTasks;
         private Queue<TutorialTask> _taskQueue;
 
         public TutorialController(IGameProgressService progressService, IAssetProvider assetProvider,
-            FarmController farmController)
+            FarmController farmController, UIFactory uiFactory)
         {
             _progressService = progressService;
             _farmController = farmController;
+            _uiFactory = uiFactory;
             _provider = new TutorialTaskProvider(assetProvider);
             
             _taskQueue = new Queue<TutorialTask>();
             _allTasks = new List<TutorialTask>();
         }
 
-        public void Init(UIFactory uiFactory)
+        public void Init()
         {
-            _uiFactory = uiFactory;
-
             var tasks = _provider.GetTutorialTasks()
                 .OrderBy(x => x.TaskData.TaskNumber)
                 .ToList();
@@ -76,7 +74,7 @@ namespace Game.Scripts.Logic.Tutorials
             task.OnStart();
         }
 
-        public void Cleanup()
+        public void CleanUp()
         {
             foreach (TutorialTask task in _allTasks)
             {

@@ -3,6 +3,7 @@ using Game.Scripts.Logic.Tutorials.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Game.Scripts.UI.Windows.Tutorial
 {
@@ -14,7 +15,8 @@ namespace Game.Scripts.UI.Windows.Tutorial
         
         private TutorialController _tutorialController;
 
-        public void Init(TutorialController tutorialController)
+        [Inject]
+        public void Construct(TutorialController tutorialController)
         {
             _tutorialController = tutorialController;
             _tutorialController.TaskStarted += OnNewTaskStarted;

@@ -4,10 +4,12 @@ using Game.Scripts.Data.StaticData.Upgrades;
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Logic;
 using Game.Scripts.Logic.Production;
+using Game.Scripts.Logic.Tutorials;
 using Game.Scripts.Logic.Upgrades;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Game.Scripts.UI.Windows.HUD.Elements
 {
@@ -27,12 +29,13 @@ namespace Game.Scripts.UI.Windows.HUD.Elements
 
         private UpgradeRepository _upgradeRepository;
         private FarmController _farmController;
+        
 
         private bool _canWatering;
         private bool _canHarvesting;
 
         private InteractionState _interactionState;
-        
+
         public void Init(IGameProgressService progressService, FarmController farmController)
         {
             _farmController = farmController;

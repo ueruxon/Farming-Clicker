@@ -4,14 +4,13 @@ using Game.Scripts.Infrastructure.Services.AssetManagement;
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic;
-using Game.Scripts.Logic.Tutorials;
 using Game.Scripts.Logic.Upgrades;
 using Game.Scripts.UI.Windows.HUD.Elements;
 using Game.Scripts.UI.Windows.SelectArea;
 using Game.Scripts.UI.Windows.Shop;
 using Game.Scripts.UI.Windows.Shop.Elements;
-using Game.Scripts.UI.Windows.Tutorial;
 using UnityEngine;
+using Zenject;
 
 namespace Game.Scripts.UI.Services.Factory
 {
@@ -24,7 +23,7 @@ namespace Game.Scripts.UI.Services.Factory
         private readonly IGameProgressService _gameProgressService;
         private readonly FarmController _farmController;
         private readonly UpgradesHandler _upgradesHandler;
-        private readonly TutorialController _tutorialController;
+        private readonly DiContainer _diContainer;
 
         private Transform _uiRoot;
         private OpenShopButton _shopButton;
@@ -33,15 +32,16 @@ namespace Game.Scripts.UI.Services.Factory
             IStaticDataService staticDataService,
             IGameProgressService gameProgressService,
             FarmController farmController,
-            UpgradesHandler upgradesHandler, 
-            TutorialController tutorialController)
+            UpgradesHandler upgradesHandler,
+            DiContainer diContainer)
         {
             _assetProvider = assetProvider;
             _staticDataService = staticDataService;
             _farmController = farmController;
             _upgradesHandler = upgradesHandler;
-            _tutorialController = tutorialController;
             _gameProgressService = gameProgressService;
+            // cheating
+            _diContainer = diContainer;
         }
 
         public void CreateUIRoot() => 
@@ -74,7 +74,7 @@ namespace Game.Scripts.UI.Services.Factory
             _shopButton.ShopOpened += OnShopOpened;
         }
 
-        public ShopItem CreateShopItem(ShopItemData shopItemData, Transform parent, ShopDataType shopDataType)
+        public ShopItem CreateShopItem(ShopItemData shopItemData, Transform parent)
         {
             ShopItem shopItem = _assetProvider.Instantiate<ShopItem>(AssetPath.UIShopItemPath, parent);
             shopItem.Init(_gameProgressService, shopItemData);
@@ -90,16 +90,13 @@ namespace Game.Scripts.UI.Services.Factory
             areaWindow.Hide();
         }
 
-        public void CreateTutorialWindow()
-        {
-            TutorialWindow window = _assetProvider.Instantiate<TutorialWindow>(AssetPath.UITutorialWindowPath, _uiRoot);
-            window.Init(_tutorialController);
-        }
+        public void CreateTutorialWindow() => 
+            _diContainer.InstantiatePrefabResource(AssetPath.UITutorialWindowPath, _uiRoot);
 
         private void OnShopOpened() => 
             ShopOpened?.Invoke();
 
-        public void Cleanup() => 
+        public void CleanUp() => 
             _shopButton.ShopOpened -= OnShopOpened;
     }
 }

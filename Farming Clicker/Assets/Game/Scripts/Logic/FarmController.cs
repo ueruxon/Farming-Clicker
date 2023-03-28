@@ -33,8 +33,8 @@ namespace Game.Scripts.Logic
         private readonly IGameProgressService _progressService;
         private readonly IStaticDataService _staticDataService;
         private readonly GridSystem _gridSystem;
-        private readonly Camera _mainCamera;
 
+        private Camera _mainCamera;
         private ProductionAreaGhost _areaGhost;
         private ProductType _activeProductType;
 
@@ -52,13 +52,15 @@ namespace Game.Scripts.Logic
             _staticDataService = staticDataService;
             _gameFactory = gameFactory;
             _gridSystem = gridSystem;
-            _mainCamera = Camera.main;
 
             _productionAreas = new List<ProductionArea>();
         }
 
-        public void Init() => 
+        public void Init()
+        {
+            _mainCamera = Camera.main;
             _progressService.Progress.UpgradeRepository.UpgradePurchased += OnSomeUpgradePurchased;
+        }
 
         public void CreateFarm()
         {
@@ -229,7 +231,7 @@ namespace Game.Scripts.Logic
         private void SetState(FarmState newState) => 
             _farmState = newState;
         
-        public void Cleanup()
+        public void CleanUp()
         {
             _progressService.Progress.UpgradeRepository.UpgradePurchased -= OnSomeUpgradePurchased;
 

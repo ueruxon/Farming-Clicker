@@ -1,12 +1,10 @@
-﻿using Game.Scripts.Data;
-using Game.Scripts.Data.Game;
+﻿using Game.Scripts.Data.Game;
 using Game.Scripts.Data.StaticData.Product;
 using Game.Scripts.Infrastructure.Services.AssetManagement;
 using Game.Scripts.Infrastructure.Services.Progress;
 using Game.Scripts.Infrastructure.Services.StaticData;
 using Game.Scripts.Logic.Production;
 using UnityEngine;
-using Zenject;
 
 namespace Game.Scripts.Infrastructure.Services.Factory
 {
@@ -22,18 +20,10 @@ namespace Game.Scripts.Infrastructure.Services.Factory
             IGameProgressService progressService, 
             GameConfig gameConfig)
         {
-            Debug.Log("а я тут");
-            
             _assetProvider = assetProvider;
             _staticDataService = staticDataService;
             _progressService = progressService;
             _gameConfig = gameConfig;
-        }
-
-        [Inject]
-        public void Construct()
-        {
-            Debug.Log("а я тут");
         }
 
         public ProductionArea CreateProductionArea(ProductType productType, Vector3 at)
