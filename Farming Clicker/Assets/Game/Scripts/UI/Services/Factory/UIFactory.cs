@@ -23,7 +23,7 @@ namespace Game.Scripts.UI.Services.Factory
         private readonly IGameProgressService _gameProgressService;
         private readonly FarmController _farmController;
         private readonly UpgradesHandler _upgradesHandler;
-        private readonly DiContainer _diContainer;
+        private readonly IInstantiator _instantiator;
 
         private Transform _uiRoot;
         private OpenShopButton _shopButton;
@@ -33,15 +33,14 @@ namespace Game.Scripts.UI.Services.Factory
             IGameProgressService gameProgressService,
             FarmController farmController,
             UpgradesHandler upgradesHandler,
-            DiContainer diContainer)
+            IInstantiator instantiator)
         {
             _assetProvider = assetProvider;
             _staticDataService = staticDataService;
             _farmController = farmController;
             _upgradesHandler = upgradesHandler;
+            _instantiator = instantiator;
             _gameProgressService = gameProgressService;
-            // cheating
-            _diContainer = diContainer;
         }
 
         public void CreateUIRoot() => 
@@ -91,7 +90,7 @@ namespace Game.Scripts.UI.Services.Factory
         }
 
         public void CreateTutorialWindow() => 
-            _diContainer.InstantiatePrefabResource(AssetPath.UITutorialWindowPath, _uiRoot);
+            _instantiator.InstantiatePrefabResource(AssetPath.UITutorialWindowPath, _uiRoot);
 
         private void OnShopOpened() => 
             ShopOpened?.Invoke();

@@ -15,7 +15,6 @@ namespace Game.Scripts.Infrastructure.Setup.Installers
                 .NonLazy();
 
             Container.Bind<UIFactory>().AsSingle();
-            Container.BindInterfacesTo<UIInstaller>().FromInstance(this).AsSingle();
         }
     }
 }

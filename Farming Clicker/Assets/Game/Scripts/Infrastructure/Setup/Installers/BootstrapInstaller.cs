@@ -1,12 +1,11 @@
 ﻿using Game.Scripts.Common;
 using Game.Scripts.Data.Game;
-using Game.Scripts.Infrastructure.Setup.Installers;
 using UnityEngine;
 using Zenject;
 
-namespace Game.Scripts.Infrastructure.Setup
+namespace Game.Scripts.Infrastructure.Setup.Installers
 {
-    public class BootstrapInstaller : MonoInstaller, ICoroutineRunner, IInitializable
+    public class BootstrapInstaller : MonoInstaller, ICoroutineRunner
     {
         [SerializeField] private GameConfig _config;
         
@@ -31,14 +30,6 @@ namespace Game.Scripts.Infrastructure.Setup
                 .FromInstance(this)
                 .AsSingle()
                 .NonLazy();
-        }
-
-        public void Initialize()
-        {
-            Debug.Log("f sda");
-            ICoroutineRunner test = Container.Resolve<ICoroutineRunner>();
-            
-            Debug.Log(test);
         }
     }
 }
